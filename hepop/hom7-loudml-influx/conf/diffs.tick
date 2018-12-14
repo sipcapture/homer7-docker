@@ -1,0 +1,13 @@
+dbrp "homer"."60s"
+
+stream
+    |from()
+        .measurement('heplify_packets_total')
+        .groupBy('type')
+    |log()
+    |difference('counter')
+    |influxDBOut()
+        .database('homer')
+        .retentionPolicy('60s')
+        .measurement('heplify_packets_total')
+

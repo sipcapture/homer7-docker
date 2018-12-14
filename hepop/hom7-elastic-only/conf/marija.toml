@@ -1,0 +1,11 @@
+[datasource]
+
+[datasource.elasticsearch]
+type="elasticsearch"
+url="http://elasticsearch:9200/heplify-*"
+#username=
+#password=
+
+[[logging]]
+output = "stdout"
+level = "debug"
