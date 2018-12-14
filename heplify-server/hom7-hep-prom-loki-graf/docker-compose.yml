@@ -58,7 +58,7 @@ services:
       org.label-schema.group: "monitoring"
   
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:master
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
@@ -114,7 +114,7 @@ services:
       org.label-schema.group: "monitoring"
 
   heplify-server:
-    image: negbie/heplify-server:latest
+    image: sipcapture/heplify-server:latest
     container_name: heplify-server
     ports:
       - "9060:9060"
@@ -134,6 +134,8 @@ services:
       - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DEDUP=false"
       - "HEPLIFYSERVER_LOKIURL=loki:3100"
+      - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
+      - "HEPLIFYSERVER_LOKITIMER=2"
     restart: unless-stopped
     expose:
       - 9090
