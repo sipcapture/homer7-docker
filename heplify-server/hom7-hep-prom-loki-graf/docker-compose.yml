@@ -58,15 +58,16 @@ services:
       org.label-schema.group: "monitoring"
   
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:master
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+#      - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_EXPLORE_ENABLED=true
     restart: unless-stopped
     expose:
       - 3000
@@ -81,8 +82,19 @@ services:
     restart: unless-stopped
     expose:
       - 3100
+    ports:
+      - "3100:3100"
+    command: "-config.file=/etc/loki/loki-local-config.yaml" 
     labels:
       org.label-schema.group: "monitoring"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:make-images-static-26a87c9
+    volumes:
+      - ./loki/promtail-docker-config.yaml:/etc/promtail/promtail-docker-config.yaml
+      - /var/log:/var/log
+    command: "-config.file=/etc/promtail/promtail-docker-config.yaml"
 
   caddy:
     image: stefanprodan/caddy
@@ -101,27 +113,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  db:
-    image: postgres:10-alpine
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: homerSeven
-      POSTGRES_USER: root
-    expose:
-      - 5432
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
-      interval: 1s
-      timeout: 3s
-      retries: 30
-  admin:
-    image: adminer
-    depends_on: 
-      - db
-    ports:
-      - 8080:8080
-
   heplify-server:
     image: negbie/heplify-server:latest
     container_name: heplify-server
@@ -134,13 +125,7 @@ services:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTCPADDR="
-      - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
-      - "HEPLIFYSERVER_DBADDR=db:5432"
-      - "HEPLIFYSERVER_DBUSER=root"
-      - "HEPLIFYSERVER_DBPASS=homerSeven"
-      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
-      - "HEPLIFYSERVER_DBCONFTABLE=homer_config"
       - "HEPLIFYSERVER_LOGLVL=info"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
@@ -148,6 +133,7 @@ services:
       - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DBDROPDAYS=7"
       - "HEPLIFYSERVER_DEDUP=false"
+      - "HEPLIFYSERVER_LOKIURL=loki:3100"
     restart: unless-stopped
     expose:
       - 9090
@@ -156,16 +142,3 @@ services:
        condition: service_healthy
     labels:
       org.label-schema.group: "monitoring"
-
-  homer-webapp:
-    container_name: homer-webapp
-    image: sipcapture/homer-app:master
-    environment:
-      - "DB_HOST=db"
-      - "DB_USER=root"
-      - "DB_PASS=homerSeven"
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-
