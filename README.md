@@ -12,6 +12,7 @@ HOMER is all about options and easy integrations. Choose your preferred flavour 
 * [HOMER 7](https://github.com/sipcapture/homer/tree/homer7) _development_
   * [HEPlify-Server](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server)
     * [HEPlify + Prometheus ](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server/hom7-hep-prom-graf)
+    * [HEPlify + Prometheus + Loki ](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server/hom7-hep-prom-loki-graf)
     * [HEPlify + InfluxDB ](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server/hom7-hep-influx) 
     * [HEPlify + InfluxDB + LoudML](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server/hom7-hep-influx)
     * [HEPlify + Elastic ](https://github.com/sipcapture/homer7-docker/tree/master/heplify-server/hom7-hep-elastic) 
