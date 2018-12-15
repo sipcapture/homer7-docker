@@ -1,6 +1,8 @@
 # HEPlify-Server + Grafana + Prometheus + Loki
 HOMER "headless" bundle leveraging Prometheus and Loki within Grafana
 
+![image](https://user-images.githubusercontent.com/1423657/50036716-4bed6480-000b-11e9-98bd-81a78cd54251.png)
+
 #### BETA VERSION! PLEASE REPORT BUGS AND IMPROVEMENTS
 
 --------
