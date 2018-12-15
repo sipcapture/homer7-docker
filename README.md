@@ -1,7 +1,7 @@
 
 <img src=http://i.imgur.com/ViXcGAD.png width=500>
 
-# HOMER Docker Containers
+# HOMER 7 Docker Containers
 http://sipcapture.org
 
 This repository provides ready-to-run [HOMER](https://github.com/sipcapture/homer/tree/homer) recipes using `Docker` and [docker-compose](https://docs.docker.com/compose/install/)
