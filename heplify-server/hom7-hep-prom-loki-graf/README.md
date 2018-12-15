@@ -1,4 +1,5 @@
-# Homer7, heplify-server, Prometheus, Grafana Stack
+# HEPlify-Server + Grafana + Prometheus + Loki
+HOMER "headless" bundle leveraging Prometheus and Loki within Grafana
 
 #### BETA VERSION! PLEASE REPORT BUGS AND IMPROVEMENTS
 
@@ -12,10 +13,9 @@ docker-compose up
 
 to bring up:  
 
-* [Adminer]      localhost:8080 (root/homerSeven) //select System->PostgresSQL
-* [Homer]        localhost:9080 (admin/sipcapture)
 * [Grafana]      localhost:3000 (admin/admin)
 * [Prometheus]   localhost:9090 (admin/admin)
+* [Loki]         localhost:3100 (admin/admin)
 * [Alertmanager] localhost:9093 (admin/admin)
 
 When the Grafana dashboard autoprovisioning does not work for you make sure you have no old grafana volumes.
