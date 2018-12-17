@@ -90,7 +90,7 @@ services:
 
   promtail:
     container_name: promtail
-    image: grafana/promtail:make-images-static-26a87c9
+    image: grafana/promtail:master
     volumes:
       - ./loki/promtail-docker-config.yaml:/etc/promtail/promtail-docker-config.yaml
       - /var/log:/var/log
@@ -136,6 +136,8 @@ services:
       - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
       - "HEPLIFYSERVER_LOKITIMER=2"
     restart: unless-stopped
+    depends_on:
+      - loki
     expose:
       - 9090
     labels:
