@@ -12,7 +12,7 @@ docker-compose up
 to bring up:  
 
 * HEPlify-server localhost:9060 (hep-only)
-* Homer localhost:9080 (admin/test123) 
+* Homer localhost:9080 (admin/sipcapture) 
 * Kibana localhost:9090 (admin/admin)
   * Elasticsearch (hep-*)
   * Telegraf
