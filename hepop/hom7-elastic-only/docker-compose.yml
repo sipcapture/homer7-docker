@@ -30,7 +30,7 @@ services:
       HEPOP_PROTO: http
       HEPOP_ID: HEPOP_101
       HEPOP_PORT: 8080
-      INFLUXDB_HOST: influxdb
+      INFLUXDB_HOST: telegraf
       INFLUXDB_PORT: 8094
       INFLUXDB_DB: homer
     restart: unless-stopped
