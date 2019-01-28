@@ -126,7 +126,13 @@ services:
       - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTCPADDR="
       - "HEPLIFYSERVER_DBSHEMA=homer7"
-      - "HEPLIFYSERVER_DBADDR=''"
+      - "HEPLIFYSERVER_DBDRIVER=postgres"
+      - "HEPLIFYSERVER_DBADDR=db:5432"
+      - "HEPLIFYSERVER_DBUSER=root"
+      - "HEPLIFYSERVER_DBPASS=homerSeven"
+      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_DBCONFTABLE=homer_config"
+      - "HEPLIFYSERVER_DBDROPDAYS=5"
       - "HEPLIFYSERVER_LOGLVL=info"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
@@ -138,7 +144,38 @@ services:
     restart: unless-stopped
     depends_on:
       - loki
+      - db
     expose:
       - 9090
     labels:
       org.label-schema.group: "monitoring"
+
+  homer-webapp:
+    container_name: homer-webapp
+    image: sipcapture/homer-app:master
+    environment:
+      - "DB_HOST=db"
+      - "DB_USER=root"
+      - "DB_PASS=homerSeven"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:11-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: homerSeven
+      POSTGRES_USER: root
+    expose:
+      - 5432
+    restart: unless-stopped
+    volumes:
+      - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
