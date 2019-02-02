@@ -113,8 +113,23 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  db:
+    image: postgres:10-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: homerSeven
+      POSTGRES_USER: root
+    expose:
+      - 5432
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
   heplify-server:
-    image: sipcapture/heplify-server:0.99
+    image: sipcapture/heplify-server:latest
     container_name: heplify-server
     ports:
       - "9060:9060"
@@ -125,8 +140,13 @@ services:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTCPADDR="
+      - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
-      - "HEPLIFYSERVER_DBADDR=''"
+      - "HEPLIFYSERVER_DBADDR=db:5432"
+      - "HEPLIFYSERVER_DBUSER=root"
+      - "HEPLIFYSERVER_DBPASS=homerSeven"
+      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_DBCONFTABLE=homer_config"
       - "HEPLIFYSERVER_LOGLVL=info"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
@@ -142,3 +162,15 @@ services:
       - 9090
     labels:
       org.label-schema.group: "monitoring"
+
+  homer-webapp:
+    container_name: homer-webapp
+    image: sipcapture/homer-app:master
+    environment:
+      - "DB_HOST=db"
+      - "DB_USER=root"
+      - "DB_PASS=homerSeven"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
