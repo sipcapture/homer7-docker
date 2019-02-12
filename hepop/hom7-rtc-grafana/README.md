@@ -7,6 +7,7 @@ This compose demo outlines the basics to connect RTC server and browser-side eve
 
 ## Components
 * HOMER 7 HEPOP (http TCP/9080)
+* INFLUXDB (http TCP/8086)
 * LOKI (http TCP/3100)
 * GRAFANA (http TCP/3000)
 
