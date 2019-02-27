@@ -8,21 +8,21 @@ volumes:
 
 services:
 
-  self-signed-certificate-generator:
-    image: magnitus/certificate-generator:latest
-    environment:
-      COUNTRY: NL
-      STATE: Noord-Holland
-      CITY: Amsterdam
-      ORGANIZATION: Any
-      DEPARTMENT: IT
-      EMAIL: email@mydomain.com
-      DOMAINS: dev.mydomain.com;test.mydomain.com
-      CERTIFICATE_DURATION: 1095
-      KEY_FILE: "cert.key"
-      CSR_FILE: "cert.csr"
-      CERTIFICATE_FILE: "cert.crt"
-      OUTPUT_CERTIFICATE_INFO: "true"
+    self-signed-certificate-generator:
+      image: magnitus/certificate-generator:latest
+      environment:
+        COUNTRY: NL
+        STATE: Noord-Holland
+        CITY: Amsterdam
+        ORGANIZATION: Any
+        DEPARTMENT: IT
+        EMAIL: email@mydomain.com
+        DOMAINS: dev.mydomain.com;test.mydomain.com
+        CERTIFICATE_DURATION: 1095
+        KEY_FILE: "cert.key"
+        CSR_FILE: "cert.csr"
+        CERTIFICATE_FILE: "cert.crt"
+        OUTPUT_CERTIFICATE_INFO: "true"
       volumes:
         - ssl_data:/opt/output
 
