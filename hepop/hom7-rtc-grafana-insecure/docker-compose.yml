@@ -1,0 +1,123 @@
+version: '3'
+
+volumes:
+    influx_data: {}
+    grafana_data: {}
+    loki_data: {}
+    ssl_data: {}
+
+services:
+
+    self-signed-certificate-generator:
+      image: magnitus/certificate-generator:latest
+      environment:
+        COUNTRY: NL
+        STATE: Noord-Holland
+        CITY: Amsterdam
+        ORGANIZATION: Any
+        DEPARTMENT: IT
+        EMAIL: email@mydomain.com
+        DOMAINS: dev.mydomain.com;test.mydomain.com
+        CERTIFICATE_DURATION: 1095
+        KEY_FILE: "cert.key"
+        CSR_FILE: "cert.csr"
+        CERTIFICATE_FILE: "cert.crt"
+        OUTPUT_CERTIFICATE_INFO: "true"
+      volumes:
+        - ssl_data:/opt/output
+
+    hepop:
+      image: sipcapture/hepop:master
+      container_name: hepop
+      volumes:
+        - ${CONFIG}/web:/config
+        - ssl_data:/ssl
+        - ./config/myconfig.js:/app/myconfig.js
+      ports:
+        - "9069:8080"
+        - "9060:9060"
+        - "9060:9060/udp"
+      environment:
+        HEPOP_DEBUG: 'true'
+      restart: unless-stopped
+      expose:
+        - 9069
+        - 9060
+      depends_on:
+        - grafana
+        - loki
+      networks:
+        homer.server:
+
+    loki:
+      image: grafana/loki:master 
+      container_name: loki
+      volumes:
+        - ./config/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
+      restart: unless-stopped
+      expose:
+        - 3100
+      ports:
+        - "3100:3100"
+      command: "-config.file=/etc/loki/loki-local-config.yaml" 
+      networks:
+        homer.server:
+
+    influxdb:
+      container_name: influxdb
+      image: influxdb:1.7-alpine
+      volumes:
+        - influx_data:/var/lib/influxdb
+      ports:
+        - "8086:8086"
+      expose:
+        - 8086
+      networks:
+        homer.server:
+
+    grafana:
+      image: grafana/grafana:master
+      container_name: grafana
+      volumes:
+        - grafana_data:/var/lib/grafana
+        - ./grafana/provisioning/:/etc/grafana/provisioning/
+      environment:
+        - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+        - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-sipcapture}
+        - GF_USERS_ALLOW_SIGN_UP=false
+        - GF_EXPLORE_ENABLED=true
+      restart: unless-stopped
+      ports:
+        - "3000:3000"
+      expose:
+        - 3000
+      networks:
+        homer.server:
+
+    provisioning:
+      image: alpine:latest
+      networks:
+        homer.server:
+      depends_on:
+        - influxdb
+      links:
+        - influxdb
+      command: 
+        - /bin/sh
+        - -c
+        - |
+          apk add --no-cache curl;
+          echo Waiting for influxdb API ...;
+          while ! nc -z influxdb 8086;
+          do
+            sleep 2;
+          done;
+          echo InfluxDB Retention Policy push ...;
+          curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE DATABASE hep'
+          echo Provisioning completed! Exiting ...;
+          poweroff;
+
+
+# Custom network so all services can communicate using a FQDN
+networks:
+    homer.server:
