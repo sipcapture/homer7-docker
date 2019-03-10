@@ -112,7 +112,7 @@ services:
       - 8080:8080
 
   heplify-server:
-    image: sipcapture/heplify-server:latest
+    image: sipcapture/heplify-server:master
     container_name: heplify-server
     ports:
       - "9060:9060"
