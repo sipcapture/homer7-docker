@@ -106,6 +106,7 @@ services:
       retries: 30
   admin:
     image: adminer
+    restart: unless-stopped
     depends_on: 
       - db
     ports:
