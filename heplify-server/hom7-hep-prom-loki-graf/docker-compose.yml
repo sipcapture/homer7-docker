@@ -94,6 +94,7 @@ services:
     volumes:
       - ./loki/promtail-docker-config.yaml:/etc/promtail/promtail-docker-config.yaml
       - /var/log:/var/log
+    restart: unless-stopped
     command: "-config.file=/etc/promtail/promtail-docker-config.yaml"
 
   caddy:
