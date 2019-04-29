@@ -82,6 +82,19 @@ services:
       db:
         condition: service_healthy
 
+  hepsub:
+    container_name: hepsub
+    image: sipcapture/hepsub:master
+    environment:
+      - "HOMER_IP=homer-webapp"
+      - "PUBLIC_IP=hepsub"
+    links:
+      - homer-webapp
+    ports:
+      - "18088:18088"
+    expose:
+      - 18088
+
   telegraf:
     image: telegraf:1.5-alpine
     restart: unless-stopped
