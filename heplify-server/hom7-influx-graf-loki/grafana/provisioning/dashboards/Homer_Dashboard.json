@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
   "links": [],
   "panels": [
     {
@@ -88,13 +87,9 @@
               },
               {
                 "params": [
-                  "10s"
+                  "1s"
                 ],
-                "type": "non_negative_derivative"
-              },
-              {
-                "params": [],
-                "type": "non_negative_difference"
+                "type": "derivative"
               }
             ]
           ],
@@ -504,7 +499,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -535,5 +530,5 @@
   "timezone": "",
   "title": "Homer Dashboard",
   "uid": "OnjYYQzZk",
-  "version": 6
+  "version": 2
 }
