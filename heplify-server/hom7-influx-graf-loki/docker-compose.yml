@@ -220,6 +220,23 @@ services:
     networks:
       homer.server:
 
+
+  hepgen:
+    image: sipcapture/hepgenjs:master
+    depends_on:
+      - homer-webapp
+      - heplify-server
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sleep 30
+        node hepgen.js -s 172.17.0.1 -a 172.17.0.1 -c ./config/b2bcall_rtcp_log.js
+        echo "HEPGEN Complete!"
+    networks:
+      homer.server:
+
+
 # Custom network so all services can communicate using a FQDN
 networks:
     homer.server:
