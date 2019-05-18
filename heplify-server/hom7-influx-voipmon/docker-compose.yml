@@ -134,6 +134,25 @@ services:
     expose:
       - 9092
 
+  voipmonitor-hep:
+    container_name: voipmonitor-hep
+    image: sipcapture/hepsub-voipmonitor
+    network_mode: "host"
+    restart: always
+    environment:
+      - PUBLIC_IP=${PUBLIC_IP)
+      - PUBLIC_PORT=18088
+      - HOMER_IP=${PUBLIC_IP}
+      - HOMER_PORT=9080
+    ports:
+      - "18088:18088/tcp"
+      - "3306:3306/tcp"
+    volumes:
+      - ./voipmonitor:/var/spool/voipmonitor
+    depends_on:
+      - homer-webapp
+
+
   provisioning:
     image: alpine:latest
     links:
