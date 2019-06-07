@@ -107,3 +107,18 @@ services:
     depends_on:
       - elasticsearch
 
+  hepsub-elastic:
+    container_name: hepsub-elastic
+    image: sipcapture/hepsub-elastic
+    restart: always
+    environment:
+      - PUBLIC_IP=${PUBLIC_IP:-hepsub-elastic}
+      - PUBLIC_PORT=${PUBLIC_PORT:-18088}
+      - HOMER_IP=${HOMER_IP:-homer-webapp}
+      - HOMER_PORT=${HOMER_PORT:-9080}
+      - API_URL=${API_URL:-http://elasticsearch:9200}
+    ports:
+      - "18088:18088/tcp"
+    depends_on:
+      - elasticsearch
+      - homer-webapp
