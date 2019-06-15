@@ -1,0 +1,176 @@
+version: '2.1'
+
+volumes:
+    victoria_metrics_data: {}
+    grafana_data: {}
+
+services:
+
+  prometheus:
+    image: victoriametrics/victoria-metrics
+    container_name: prometheus
+    volumes:
+      - victoria_metrics_data:/victoria-metrics-data
+    command:
+      - '-httpListenAddr 9090'
+    restart: unless-stopped
+    expose:
+      - 9090
+    labels:
+      org.label-schema.group: "monitoring"
+  
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    volumes: 
+      - ./alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    restart: unless-stopped
+    expose:
+      - 9093
+    labels:
+      org.label-schema.group: "monitoring"
+
+  nodeexporter:
+    image: prom/node-exporter:latest
+    container_name: nodeexporter
+    user: root
+    privileged: true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    expose:
+      - 9100
+    labels:
+      org.label-schema.group: "monitoring"
+  
+  grafana:
+    image: grafana/grafana:master
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_EXPLORE_ENABLED=true
+    restart: unless-stopped
+    expose:
+      - 3000
+    labels:
+      org.label-schema.group: "monitoring"
+
+  loki:
+    image: grafana/loki:master
+    container_name: loki
+    volumes:
+      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
+    restart: unless-stopped
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+    command: "-config.file=/etc/loki/loki-local-config.yaml" 
+    labels:
+      org.label-schema.group: "monitoring"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:master
+    volumes:
+      - ./loki/promtail-docker-config.yaml:/etc/promtail/promtail-docker-config.yaml
+      - /var/log:/var/log
+    command: "-config.file=/etc/promtail/promtail-docker-config.yaml"
+
+  caddy:
+    image: stefanprodan/caddy
+    container_name: caddy
+    ports:
+      - "3000:3000"
+      - "9090:9090"
+      - "9093:9093"
+      - "9080:9080"
+    volumes:
+      - ./caddy/:/etc/caddy/
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+    restart: unless-stopped
+    labels:
+      org.label-schema.group: "monitoring"
+
+  heplify-server:
+    image: sipcapture/heplify-server:master
+    container_name: heplify-server
+    ports:
+      - "9060:9060"
+      - "9060:9060/udp"
+    command:
+      - './heplify-server'
+    environment:
+      - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
+      - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9060"
+      - "HEPLIFYSERVER_HEPTCPADDR="
+      - "HEPLIFYSERVER_DBSHEMA=homer7"
+      - "HEPLIFYSERVER_DBDRIVER=postgres"
+      - "HEPLIFYSERVER_DBADDR=db:5432"
+      - "HEPLIFYSERVER_DBUSER=root"
+      - "HEPLIFYSERVER_DBPASS=homerSeven"
+      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_DBCONFTABLE=homer_config"
+      - "HEPLIFYSERVER_DBDROPDAYS=5"
+      - "HEPLIFYSERVER_LOGLVL=info"
+      - "HEPLIFYSERVER_LOGSTD=true"
+      - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
+      - "HEPLIFYSERVER_PROMTARGETIP="
+      - "HEPLIFYSERVER_PROMTARGETNAME="
+      - "HEPLIFYSERVER_DEDUP=false"
+      - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
+      - "HEPLIFYSERVER_LOKITIMER=2"
+    restart: unless-stopped
+    depends_on:
+      - loki
+      - db
+    expose:
+      - 9090
+    labels:
+      org.label-schema.group: "monitoring"
+
+  homer-webapp:
+    container_name: homer-webapp
+    image: sipcapture/homer-app:master
+    environment:
+      - "DB_HOST=db"
+      - "DB_USER=root"
+      - "DB_PASS=homerSeven"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:11-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: homerSeven
+      POSTGRES_USER: root
+    expose:
+      - 5432
+    restart: unless-stopped
+    volumes:
+      - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
