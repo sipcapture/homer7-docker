@@ -12,7 +12,9 @@ services:
     volumes:
       - victoria_metrics_data:/victoria-metrics-data
     command:
-      - '-httpListenAddr 9090'
+      - '-httpListenAddr=:9090'
+      - '-httpAuth.username=admin'
+      - '-httpAuth.password=admin'
     restart: unless-stopped
     expose:
       - 9090
@@ -174,3 +176,23 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+
+  homer-proxy:
+    container_name: homer-proxy
+    image: sipcapture/homer-proxy
+    volumes:
+      - ./view/proxy-config.js:/app/config.js
+    expose:
+      - 8765
+    ports:
+      - "8765:8765"
+
+  homer-view:
+    container_name: homer-view
+    image: sipcapture/homer-view
+    volumes:
+      - ./view/view-config.js:/usr/src/app/src/config/index.js
+    ports:
+      - "9088:3000"
+    links:
+      - homer-proxy
