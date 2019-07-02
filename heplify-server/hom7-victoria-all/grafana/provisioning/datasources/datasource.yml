@@ -22,9 +22,9 @@ datasources:
   # <string> url
   url: http://prometheus:9090
   # <string> database password, if used
-  password:
+  password: admin
   # <string> database user, if used
-  user:
+  user: admin
   # <string> database name, if used
   database:
   # <bool> enable/disable basic auth

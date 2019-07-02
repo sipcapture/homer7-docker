@@ -71,20 +71,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  loki:
-    image: grafana/loki:master
-    container_name: loki
-    volumes:
-      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
-    restart: unless-stopped
-    expose:
-      - 3100
-    ports:
-      - "3100:3100"
-    command: "-config.file=/etc/loki/loki-local-config.yaml" 
-    labels:
-      org.label-schema.group: "monitoring"
-
   promtail:
     container_name: promtail
     image: grafana/promtail:master
@@ -159,6 +145,21 @@ services:
       db:
         condition: service_healthy
 
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+#    volumes:
+#      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
+    restart: unless-stopped
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+#    command: "-config.file=/etc/loki/loki-local-config.yaml" 
+    command: -config.file=/etc/loki/local-config.yaml
+    labels:
+      org.label-schema.group: "monitoring"
+
   db:
     image: postgres:11-alpine
     restart: always
@@ -176,6 +177,16 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+
+  telegraf:
+    container_name: telegraf-hep
+    image: telegraf:1.11-alpine
+    restart: unless-stopped
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf
+    depends_on:
+      - heplify-server
+      - prometheus
 
   homer-proxy:
     container_name: homer-proxy
