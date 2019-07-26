@@ -7,13 +7,14 @@ ingester:
   lifecycler:
     address: 127.0.0.1
     ring:
-      store: inmemory
+      kvstore:
+        store: inmemory
       replication_factor: 1
   chunk_idle_period: 15m
 
 schema_config:
   configs:
-  - from: 0
+  - from: 2019-01-01
     store: boltdb
     object_store: filesystem
     schema: v9
