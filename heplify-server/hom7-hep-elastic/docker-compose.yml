@@ -110,7 +110,6 @@ services:
   hepsub-elastic:
     container_name: hepsub-elastic
     image: sipcapture/hepsub-elastic
-    restart: always
     environment:
       - PUBLIC_IP=${PUBLIC_IP:-hepsub-elastic}
       - PUBLIC_PORT=${PUBLIC_PORT:-18088}
