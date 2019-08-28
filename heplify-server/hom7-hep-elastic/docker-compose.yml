@@ -1,4 +1,4 @@
-version: '2.1'
+version: '2'
 
 services:
   caddy:
@@ -6,15 +6,13 @@ services:
     image: stefanprodan/caddy
     container_name: caddy
     ports:
-      - "3000:3000"
       - "9090:9090"
-      - "9093:9093"
       - "9080:9080"
     volumes:
       - ./caddy/:/etc/caddy/
     environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - ADMIN_USER=admin
+      - ADMIN_PASSWORD=admin
     restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
@@ -24,17 +22,10 @@ services:
     environment:
       POSTGRES_PASSWORD: homerSeven
       POSTGRES_USER: root
-    expose:
-      - 5432
     restart: unless-stopped
     volumes:
       - ./conf/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - ./postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
-      interval: 1s
-      timeout: 3s
-      retries: 30
 
   heplify-server:
     image: sipcapture/heplify-server:master
@@ -59,11 +50,8 @@ services:
       - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DBDROPDAYS=7"
     restart: unless-stopped
-    expose:
-      - 9090
     depends_on:
-     db:
-       condition: service_healthy
+     - db
     labels:
       org.label-schema.group: "monitoring"
 
@@ -74,21 +62,15 @@ services:
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
-    expose:
-      - 8001
     restart: unless-stopped
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   telegraf:
     image: telegraf:1.5-alpine
     restart: unless-stopped
     volumes:
       - ./conf/telegraf.conf:/etc/telegraf/telegraf.conf
-    ports:
-      - "8092:8092/udp"
-      - "8125:8125/udp"
     depends_on:
       - heplify-server
 
@@ -96,14 +78,10 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.3.1
     container_name: elasticsearch
     environment: ['http.host=0.0.0.0', 'transport.host=127.0.0.1']
-    ports:
-      - "9200:9200"
 
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.3.1
     container_name: kibana
-    ports:
-      - "5601:5601"
     depends_on:
       - elasticsearch
 
@@ -111,13 +89,11 @@ services:
     container_name: hepsub-elastic
     image: sipcapture/hepsub-elastic
     environment:
-      - PUBLIC_IP=${PUBLIC_IP:-hepsub-elastic}
-      - PUBLIC_PORT=${PUBLIC_PORT:-18088}
-      - HOMER_IP=${HOMER_IP:-homer-webapp}
-      - HOMER_PORT=${HOMER_PORT:-9080}
-      - API_URL=${API_URL:-http://elasticsearch:9200}
-    ports:
-      - "18088:18088/tcp"
+      - PUBLIC_IP=hepsub-elastic
+      - PUBLIC_PORT=18088
+      - HOMER_IP=homer-webapp
+      - HOMER_PORT=9080
+      - API_URL=http://elasticsearch:9200
     depends_on:
       - elasticsearch
       - homer-webapp
