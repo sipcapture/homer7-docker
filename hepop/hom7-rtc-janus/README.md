@@ -1,3 +1,5 @@
+<img src="https://www.januscon.it/assets/images/januscon.png" width=300>
+
 # RTC Homer & Janus
 This magic bundle provides a fully working Janus + HOMER (headless) setup for tracking statistics and events via Grafana.
 
@@ -17,7 +19,7 @@ This demo uses self-signed certificates. Before using the demo, those must be ac
 https://YOUR-SERVER:8089
 ```
 
-![image](https://user-images.githubusercontent.com/1423657/64474359-6278b480-d174-11e9-8b12-2555063534c8.png)
+<img src="https://user-images.githubusercontent.com/1423657/64474359-6278b480-d174-11e9-8b12-2555063534c8.png" width=200>
 
 Proceed to `advanced` options and choose to proceed and accept the certificate.
 
