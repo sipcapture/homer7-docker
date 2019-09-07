@@ -16,6 +16,11 @@ This demo uses self-signed certificates. Before using the demo, those must be ac
 ```
 https://YOUR-SERVER:8089
 ```
+
+![image](https://user-images.githubusercontent.com/1423657/64474359-6278b480-d174-11e9-8b12-2555063534c8.png)
+
+Proceed to `advanced` options and choose to proceed and accept the certificate.
+
 ##### Janus Demos
 To access the Janus demos, browse to:
 ```
@@ -28,6 +33,11 @@ To access the Janus Events and Logs, access Grafana by browsing to:
 ```
 http://YOUR-SERVER:3000
 ```
+
+![image](https://user-images.githubusercontent.com/1423657/64474329-0877ef00-d174-11e9-8e08-ea1b3f7d9e21.png)
+
+![image](https://user-images.githubusercontent.com/1423657/64474342-25acbd80-d174-11e9-9dcd-3b2b0608ae1b.png)
+
 
 
 
