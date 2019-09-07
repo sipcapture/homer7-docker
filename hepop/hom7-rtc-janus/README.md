@@ -28,11 +28,9 @@ https://YOUR-SERVER:8080
 ```
 
 ##### Grafana Demo
-```
 To access the Janus Events and Logs, access Grafana by browsing to:
-```
-http://YOUR-SERVER:3000
-```
+```http://YOUR-SERVER:3000``` 
+
 
 ![image](https://user-images.githubusercontent.com/1423657/64474329-0877ef00-d174-11e9-8e08-ea1b3f7d9e21.png)
 
