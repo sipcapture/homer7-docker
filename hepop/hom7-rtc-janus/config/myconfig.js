@@ -26,7 +26,8 @@
           "expire": 300000,
           "dbName": "hep",
           "hostname": "influxdb:8086"
-        }
+        },
+	"media_bypass": false
   },
   "debug": true
 }
