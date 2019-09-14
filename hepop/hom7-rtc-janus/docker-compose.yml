@@ -122,7 +122,7 @@ services:
       image: hepic/janus-gateway
       container_name: janus
       ports:
-        - "7088:7088"
+        - "7889:7889"
         - "8080:8080"
         - "8089:8089"
         - "8088:8088"
@@ -130,9 +130,11 @@ services:
         - "10000-10200:10000-10200/udp"
       volumes:
         - ssl_data:/ssl
+        - ./config/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
+        - ./config/janus.transport.http.jcfg:/opt/janus/etc/janus/janus.transport.http.jcfg
         - ./config/janus.eventhandler.sampleevh.jcfg:/opt/janus/etc/janus/janus.eventhandler.sampleevh.jcfg
-      environment:
-        - DOCKER_IP=${DOCKER_IP}
+#      environment:
+#        - DOCKER_IP=${DOCKER_IP}
       networks:
         homer.server:
 
