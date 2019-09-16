@@ -50,6 +50,6 @@ table_manager:
     inactive_write_throughput: 0
     provisioned_read_throughput: 0
     provisioned_write_throughput: 0
-  retention_deletes_enabled: false
-  retention_period: 0
+  retention_deletes_enabled: true
+  retention_period: 168h
 
