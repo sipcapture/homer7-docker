@@ -67,7 +67,7 @@ services:
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/homer-app:master
+    image: sipcapture/homer-app:server
     environment:
       - "DB_HOST=db"
       - "DB_USER=root"
