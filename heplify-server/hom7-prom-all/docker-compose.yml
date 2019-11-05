@@ -64,6 +64,10 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_OAUTH_AUTO_LOGIN=true
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
@@ -77,24 +81,13 @@ services:
   loki:
     image: grafana/loki:master
     container_name: loki
-    volumes:
-      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
     restart: unless-stopped
     expose:
       - 3100
     ports:
       - "3100:3100"
-    command: "-config.file=/etc/loki/loki-local-config.yaml" 
     labels:
       org.label-schema.group: "monitoring"
-
-  promtail:
-    container_name: promtail
-    image: grafana/promtail:master
-    volumes:
-      - ./loki/promtail-docker-config.yaml:/etc/promtail/promtail-docker-config.yaml
-      - /var/log:/var/log
-    command: "-config.file=/etc/promtail/promtail-docker-config.yaml"
 
   caddy:
     image: stefanprodan/caddy

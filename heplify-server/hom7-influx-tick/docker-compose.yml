@@ -1,4 +1,4 @@
-version: '3.1'
+version: '2.1'
 
 services:
   caddy:
@@ -20,15 +20,22 @@ services:
       org.label-schema.group: "monitoring"
 
   db:
-    container_name: db
-    image: mariadb:latest
+    image: postgres:11-alpine
+    restart: always
     environment:
-      - "MYSQL_ROOT_PASSWORD="
-      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
-      - "MYSQL_ROOT_HOST=%"
+      POSTGRES_PASSWORD: homerSeven
+      POSTGRES_USER: root
     expose:
-      - 3306
+      - 5432
     restart: unless-stopped
+    volumes:
+      - ./conf/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
 
   heplify-server:
     image: sipcapture/heplify-server:master
@@ -40,11 +47,13 @@ services:
       - './heplify-server'
     environment:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
-      - "HEPLIFYSERVER_DBDRIVER=mysql"
-      - "HEPLIFYSERVER_DBADDR=db:3306"
+      - "HEPLIFYSERVER_DBDRIVER=postgres"
+      - "HEPLIFYSERVER_DBSHEMA=homer7"
+      - "HEPLIFYSERVER_DBADDR=db:5432"
       - "HEPLIFYSERVER_DBUSER=root"
-      - "HEPLIFYSERVER_DBPASS="
-      - "HEPLIFYSERVER_LOGLVL=info"
+      - "HEPLIFYSERVER_DBPASS=homerSeven"
+      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_LOGLVL=debug"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
       - "HEPLIFYSERVER_PROMTARGETIP="
@@ -52,26 +61,39 @@ services:
       - "HEPLIFYSERVER_DBDROPDAYS=7"
     restart: unless-stopped
     expose:
-      - 9096
+      - 9090
     depends_on:
-      - db
+     db:
+       condition: service_healthy
     labels:
       org.label-schema.group: "monitoring"
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/homer-webapp
+    image: sipcapture/homer-app:server
     environment:
       - "DB_HOST=db"
       - "DB_USER=root"
-      - "DB_PASS="
+      - "DB_PASS=homerSeven"
     expose:
-      - 80
-    volumes:
-      - ./docker-compose.yml:/homer-semaphore/.bootstrapped
+      - 8001
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  hepsub:
+    container_name: hepsub
+    image: sipcapture/hepsub:master
+    environment:
+      - "HOMER_IP=homer-webapp"
+      - "PUBLIC_IP=hepsub"
+    links:
+      - homer-webapp
+    ports:
+      - "18088:18088"
+    expose:
+      - 18088
 
   telegraf:
     image: telegraf:1.5-alpine
