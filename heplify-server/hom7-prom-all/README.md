@@ -1,6 +1,6 @@
-# HEPlify-Server + Grafana + Prometheus + Loki
-HOMER "headless" bundle leveraging Prometheus and Loki within Grafana
+# HOMER + Grafana + Prometheus + Loki
 
+![image](https://i.imgur.com/Atdig3X.gif)
 ![image](https://user-images.githubusercontent.com/1423657/50036716-4bed6480-000b-11e9-98bd-81a78cd54251.png)
 
 #### BETA VERSION! PLEASE REPORT BUGS AND IMPROVEMENTS
@@ -15,6 +15,7 @@ docker-compose up
 
 to bring up:  
 
+* [Homer]   localhost:9080 (admin/sipcapture)
 * [Grafana]      localhost:3000 (admin/admin)
 * [Prometheus]   localhost:9090 (admin/admin)
 * [Loki]         localhost:3100 (admin/admin)
