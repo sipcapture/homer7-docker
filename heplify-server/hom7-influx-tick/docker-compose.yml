@@ -78,6 +78,8 @@ services:
     expose:
       - 8001
     restart: unless-stopped
+    volumes:
+      - ./bootstrap:/app/bootstrap
     depends_on:
       db:
         condition: service_healthy
