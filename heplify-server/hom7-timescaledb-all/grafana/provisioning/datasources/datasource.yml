@@ -22,7 +22,7 @@ datasources:
   # <string> url
   url: db:5432
   # <string> database password, if used
-  password:
+  password: homerSeven
   # <string> database user, if used
   user: root
   # <string> database name, if used
