@@ -1,0 +1,1 @@
+{"id":3,"orgId":1,"name":"TimescaleDB","type":"postgres","typeLogoUrl":"public/app/plugins/datasource/postgres/img/postgresql_logo.svg","access":"proxy","url":"db:5432","password":"","user":"root","database":"homer_data","basicAuth":false,"isDefault":true,"jsonData":{"postgresVersion":1000,"sslmode":"disable","timescaledb":true},"readOnly":false}

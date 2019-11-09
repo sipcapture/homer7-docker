@@ -1,29 +1,10 @@
 version: '2.1'
 
 volumes:
-    prometheus_data: {}
+    timescale_data: {}
     grafana_data: {}
 
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    volumes:
-      - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
-      - '--web.enable-lifecycle'
-    restart: unless-stopped
-    expose:
-      - 9090
-    labels:
-      org.label-schema.group: "monitoring"
-  
   alertmanager:
     image: prom/alertmanager:latest
     container_name: alertmanager
@@ -38,25 +19,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  nodeexporter:
-    image: prom/node-exporter:latest
-    container_name: nodeexporter
-    user: root
-    privileged: true
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    expose:
-      - 9100
-    labels:
-      org.label-schema.group: "monitoring"
-  
   grafana:
     image: grafana/grafana:master
     container_name: grafana
@@ -105,6 +67,22 @@ services:
     restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
+
+  telegraf:
+    image: sipcapture/telegraf-timescale
+    restart: unless-stopped
+    environment:
+      - PGHOST=db
+      - PGDATABASE=homer_data
+      - PGUSER=${PGUSER:-root}
+      - PGPASSWORD=${PGPASSWORD:-homerSeven}
+    volumes:
+      - ./conf/telegraf.conf:/etc/telegraf/telegraf.conf
+    ports:
+      - "8092:8092/udp"
+      - "8125:8125/udp"
+    depends_on:
+      - heplify-server
 
   heplify-server:
     image: sipcapture/heplify-server:master
@@ -159,7 +137,7 @@ services:
 
   db:
     container_name: db
-    image: postgres:11-alpine
+    image: timescale/timescaledb:latest-pg11
     restart: always
     environment:
       POSTGRES_PASSWORD: homerSeven
@@ -168,7 +146,7 @@ services:
       - 5432
     restart: unless-stopped
     volumes:
-      - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+      - ./conf/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - ./postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "psql -h 'localhost' -U 'root' -c '\\l'"]
