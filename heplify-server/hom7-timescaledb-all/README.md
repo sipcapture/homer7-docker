@@ -3,6 +3,7 @@
 # HOMER + TimescaleDB + Grafana + Loki
 
 ![image](https://i.imgur.com/Atdig3X.gif)
+![image](https://user-images.githubusercontent.com/1423657/68542499-87281d00-03ad-11ea-8c4c-fbccdc8c023b.png)
 ![image](https://user-images.githubusercontent.com/1423657/50036716-4bed6480-000b-11e9-98bd-81a78cd54251.png)
 
 #### BETA VERSION! PLEASE REPORT BUGS AND IMPROVEMENTS
