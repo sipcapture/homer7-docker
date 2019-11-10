@@ -1,6 +1,6 @@
 <img src="https://user-images.githubusercontent.com/1423657/55069501-8348c400-5084-11e9-9931-fefe0f9874a7.png" width=200/>
 
-# HOMER + TimescaleDB + Grafana + Loki
+# HOMER + TimescaleDB + Grafana
 
 ![image](https://i.imgur.com/Atdig3X.gif)
 ![image](https://user-images.githubusercontent.com/1423657/68542499-87281d00-03ad-11ea-8c4c-fbccdc8c023b.png)
@@ -19,9 +19,8 @@ docker-compose up
 to bring up:  
 
 * [Homer]   localhost:9080 (admin/sipcapture)
+* [TimescaleDB]   localhost:5432 (root/homerSeven)
 * [Grafana]      localhost:3000 (admin/admin)
-* [TimescaleDb]   localhost:5432 (root/homerSeven)
-* [Loki]         localhost:3100 (admin/admin)
 * [Alertmanager] localhost:9093 (admin/admin)
 
 When the Grafana dashboard autoprovisioning does not work for you make sure you have no old grafana volumes.

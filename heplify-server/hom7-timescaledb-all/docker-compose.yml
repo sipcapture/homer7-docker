@@ -40,17 +40,6 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  loki:
-    image: grafana/loki:master
-    container_name: loki
-    restart: unless-stopped
-    expose:
-      - 3100
-    ports:
-      - "3100:3100"
-    labels:
-      org.label-schema.group: "monitoring"
-
   caddy:
     image: stefanprodan/caddy
     container_name: caddy
@@ -110,11 +99,8 @@ services:
       - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
       - "HEPLIFYSERVER_PROMTARGETNAME=local"
       - "HEPLIFYSERVER_DEDUP=false"
-      - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
-      - "HEPLIFYSERVER_LOKITIMER=2"
     restart: unless-stopped
     depends_on:
-      - loki
       - db
     expose:
       - 9090
