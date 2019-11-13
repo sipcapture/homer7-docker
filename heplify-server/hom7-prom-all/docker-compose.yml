@@ -23,7 +23,7 @@ services:
       - 9090
     labels:
       org.label-schema.group: "monitoring"
-  
+
   alertmanager:
     image: prom/alertmanager:latest
     container_name: alertmanager
@@ -37,6 +37,8 @@ services:
       - 9093
     labels:
       org.label-schema.group: "monitoring"
+    depends_on:
+      - grafana
 
   nodeexporter:
     image: prom/node-exporter:latest
@@ -56,6 +58,8 @@ services:
       - 9100
     labels:
       org.label-schema.group: "monitoring"
+    depends_on:
+      - prometheus
   
   grafana:
     image: grafana/grafana:master
@@ -75,6 +79,11 @@ services:
     restart: unless-stopped
     expose:
       - 3000
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/login || exit 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
     labels:
       org.label-schema.group: "monitoring"
 
@@ -156,6 +165,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      grafana:
+        condition: service_healthy
 
   db:
     container_name: db
@@ -175,3 +186,5 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    depends_on:
+      - grafana
