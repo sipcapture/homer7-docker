@@ -114,8 +114,10 @@ services:
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/homer-app:server
+    image: sipcapture/webapp
     environment:
+      - "LOKI_HOST=loki"
+      - "PROM_HOST=prometheus"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
