@@ -45,3 +45,9 @@ When you need to change the docker-compose file i.e to setup smtp for Grafana:
 docker-compose up -d
 ```
 Docker will only restart the service you changed inside the docker-compose file. 
+
+#### Reinstall, Reset
+To reset and cause db provisioning, simply empty out the `bootstrap` file
+```
+echo "" > ./bootstrap
+```
