@@ -38,26 +38,27 @@ services:
       retries: 30
 
   heplify-server:
-    image: sipcapture/hepop:master
+    image: sipcapture/heplify-server:master
     container_name: heplify-server
     ports:
-      - "8080:8080"
       - "9060:9060"
       - "9060:9060/udp"
+    command:
+      - './heplify-server'
     environment:
-      HEPOP_HOST: 0.0.0.0
-      HEPOP_PROTO: http
-      HEPOP_ID: HEPOP_101
-      HEPOP_PORT: 8080
-      HEPOP_DEBUG: 'true'
-      PGSQL_HOST: db
-      PGSQL_DBNAME: homer_data
-      PGSQL_PORT: 5432
-      PGSQL_USER: root
-      PGSQL_PASSWORD: homerSeven
-      INFLUXDB_HOST: influxdb
-      INFLUXDB_PORT: 8086
-      INFLUXDB_DB: homer
+      - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
+      - "HEPLIFYSERVER_DBDRIVER=postgres"
+      - "HEPLIFYSERVER_DBSHEMA=homer7"
+      - "HEPLIFYSERVER_DBADDR=db:5432"
+      - "HEPLIFYSERVER_DBUSER=root"
+      - "HEPLIFYSERVER_DBPASS=homerSeven"
+      - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_LOGLVL=debug"
+      - "HEPLIFYSERVER_LOGSTD=true"
+      - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
+      - "HEPLIFYSERVER_PROMTARGETIP="
+      - "HEPLIFYSERVER_PROMTARGETNAME="
+      - "HEPLIFYSERVER_DBDROPDAYS=7"
     restart: unless-stopped
     expose:
       - 9090
@@ -69,20 +70,37 @@ services:
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/homer-app:server
+    image: sipcapture/webapp
     environment:
+      - "LOKI_HOST=loki"
+      - "PROM_HOST=prometheus"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
     expose:
-      - 8001
+      - 80
     restart: unless-stopped
+    volumes:
+      - ./bootstrap:/app/bootstrap
     depends_on:
       db:
         condition: service_healthy
 
+  hepsub:
+    container_name: hepsub
+    image: sipcapture/hepsub:master
+    environment:
+      - "HOMER_IP=homer-webapp"
+      - "PUBLIC_IP=hepsub"
+    links:
+      - homer-webapp
+    ports:
+      - "18088:18088"
+    expose:
+      - 18088
+
   telegraf:
-    image: telegraf:1.8-alpine
+    image: telegraf:1.5-alpine
     restart: unless-stopped
     volumes:
       - ./conf/telegraf.conf:/etc/telegraf/telegraf.conf
@@ -93,14 +111,14 @@ services:
       - heplify-server
 
   influxdb:
-    image: influxdb:1.6-alpine
+    image: influxdb:1.5-alpine
     volumes:
       - ./influx:/var/lib/influxdb
     expose:
       - 8086
 
   chronograf:
-    image: chronograf:1.6
+    image: chronograf:1.5-alpine
     environment:
       INFLUXDB_URL: http://influxdb:8086
       KAPACITOR_URL: http://kapacitor:9092
