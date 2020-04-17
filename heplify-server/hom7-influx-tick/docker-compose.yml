@@ -53,6 +53,7 @@ services:
       - "HEPLIFYSERVER_DBUSER=root"
       - "HEPLIFYSERVER_DBPASS=homerSeven"
       - "HEPLIFYSERVER_DBDATATABLE=homer_data"
+      - "HEPLIFYSERVER_DBROTATE=true"
       - "HEPLIFYSERVER_LOGLVL=debug"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
