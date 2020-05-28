@@ -94,7 +94,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without(direction,node_id) (rate(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\"}[10m]))",
+          "expr": "sum without(direction,node_id) (rate(heplify_method_response{instance=~\"$tn\", method=\"INVITE\"}[10m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -191,7 +191,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without(direction,node_id) (rate(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\"}[2m]))",
+          "expr": "sum without(direction,node_id) (rate(heplify_method_response{instance=~\"$tn\", method=\"REGISTER\"}[2m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -290,7 +290,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without(direction,node_id) (rate(heplify_method_response{target_name=~\"$tn\", method!~\"REGISTER|INVITE\"}[10m]))",
+          "expr": "sum without(direction,node_id) (rate(heplify_method_response{instance=~\"$tn\", method!~\"REGISTER|INVITE\"}[10m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -361,7 +361,7 @@
         "multi": true,
         "name": "tn",
         "options": [],
-        "query": "label_values(heplify_method_response, target_name)",
+        "query": "label_values(heplify_method_response, instance)",
         "refresh": 1,
         "regex": "",
         "sort": 0,

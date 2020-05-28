@@ -105,7 +105,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m]))) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m])) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[5m])) or sum(up) * 0)) * \n160 * sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m]))",
+          "expr": "(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m]))) / \n(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m])) - \n(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[5m])) or sum(up) * 0)) * \n160 * sum(rate(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -114,7 +114,7 @@
           "step": 2
         },
         {
-          "expr": "(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m] offset 1w))) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m] offset 1w)) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[5m] offset 1w)) or sum(up) * 0)) * \n160 * sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m] offset 1w))",
+          "expr": "(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m] offset 1w))) / \n(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m] offset 1w)) - \n(sum(increase(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[5m] offset 1w)) or sum(up) * 0)) * \n160 * sum(rate(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m] offset 1w))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "CS last week",
@@ -211,7 +211,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m]))",
+          "expr": "sum(rate(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"200\"}[5m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "CPS per interface",
@@ -219,7 +219,7 @@
           "step": 2
         },
         {
-          "expr": "sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m]))",
+          "expr": "sum(rate(heplify_method_response{instance=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[5m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "CAPS per interface",
@@ -319,7 +319,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\", response=\"200\"}[5m]))",
+          "expr": "sum(rate(heplify_method_response{instance=~\"$tn\", method=\"REGISTER\", response=\"200\"}[5m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -328,7 +328,7 @@
           "step": 2
         },
         {
-          "expr": "sum(rate(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\", response=\"REGISTER\"}[5m]))",
+          "expr": "sum(rate(heplify_method_response{instance=~\"$tn\", method=\"REGISTER\", response=\"REGISTER\"}[5m]))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "RAPS per interface",
@@ -395,7 +395,7 @@
         "multi": true,
         "name": "tn",
         "options": [],
-        "query": "label_values(heplify_method_response, target_name)",
+        "query": "label_values(heplify_method_response, instance)",
         "refresh": 1,
         "regex": "",
         "sort": 0,
