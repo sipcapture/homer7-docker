@@ -4,7 +4,6 @@ services:
   caddy:
     container_name: caddy
     image: stefanprodan/caddy
-    container_name: caddy
     ports:
       - "9090:9090"
     volumes:

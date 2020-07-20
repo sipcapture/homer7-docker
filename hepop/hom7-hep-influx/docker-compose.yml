@@ -4,7 +4,6 @@ services:
   caddy:
     container_name: caddy
     image: stefanprodan/caddy
-    container_name: caddy
     ports:
       - "3000:3000"
       - "9090:9090"
@@ -21,7 +20,6 @@ services:
 
   db:
     image: postgres:11-alpine
-    restart: always
     environment:
       POSTGRES_PASSWORD: homerSeven
       POSTGRES_USER: root
@@ -148,4 +146,3 @@ services:
         curl -i -X POST -H "Content-Type: application/json" http://chronograf/chronograf/v1/dashboards -d @/tmp/homer_dashboard.json
         echo Provisioning completed! Exiting ...;
         poweroff;
-
