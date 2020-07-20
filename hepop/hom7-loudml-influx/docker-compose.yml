@@ -33,7 +33,7 @@ services:
       timeout: 3s
       retries: 30
 
-heplify-server:
+  heplify-server:
     image: sipcapture/hepop:master
     container_name: heplify-server
     ports:
