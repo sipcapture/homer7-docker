@@ -135,7 +135,6 @@ services:
   db:
     container_name: db
     image: timescale/timescaledb:latest-pg11
-    restart: always
     environment:
       POSTGRES_PASSWORD: homerSeven
       POSTGRES_USER: root
