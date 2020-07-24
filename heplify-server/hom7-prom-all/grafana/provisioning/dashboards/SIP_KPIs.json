@@ -59,6 +59,7 @@
       "dashes": false,
       "datasource": "Prometheus",
       "decimals": 1,
+      "description": "SIP\n\nSER = Session Establishment Ratio\n\n``` \n           # of INVITE Requests \n            w/ associated 200 OK\nSER = ----------------------------------- x 100\n         (Total # of INVITE Requests) -\n   \t(# of INVITE Requests w/ 3XX Response)\n```\nsimilar to\n\nE.411\n\nASR = Answer Seizure Ratio\n\nGenerally measured at originating UA only.\n\nhttps://tools.ietf.org/html/rfc6076#section-4.6",
       "editable": true,
       "error": false,
       "fill": 0,
@@ -170,6 +171,7 @@
       "dashes": false,
       "datasource": "Prometheus",
       "decimals": 1,
+      "description": "SIP\n\nSEER = Session Establishment Effectiveness Ratio\n\n```\n# of INVITE Requests w/ associated \n 200, 480, 486, 600, or 603\n--------------------------------- x 100\n(Total # of INVITE Requests) -\n  (# of INVITE Requests w/ 3XX Response)\n```\nsimilar to E.411\n\nNER = Network Effectiveness Ratio\n\nhttps://tools.ietf.org/html/rfc6076#section-4.7",
       "editable": true,
       "error": false,
       "fill": 0,
@@ -279,6 +281,7 @@
       "dashes": false,
       "datasource": "Prometheus",
       "decimals": 1,
+      "description": "SIP\n\nSCR = Session Completion Ratio\n\n```\n       # of Successfully Completed Sessions\nSCR % = ----------------------------------- x 100\n            Total # of Session Requests\n```\nsimilar to E.411\n\nCCR = Call Completion Ratio\n\nhttps://tools.ietf.org/html/rfc6076#section-4.9",
       "editable": true,
       "error": false,
       "fill": 0,
@@ -385,6 +388,7 @@
       "dashes": false,
       "datasource": "Prometheus",
       "decimals": 1,
+      "description": "SIP\n\nIRA = Ineffective Registration Attempts\n```\n\n                  # of IRAs\nIRA % = ----------------------------- x 100\n         Total # of REGISTER Requests\n```\nhttps://tools.ietf.org/html/rfc6076#section-4.2\n\nISA = Ineffective Session Attempts\n```\n                # of ISAs\nISA % = ----------------------------- x 100\n       Total # of Session Requests\n```\nhttps://tools.ietf.org/html/rfc6076#section-4.8\n",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -542,7 +546,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "SIP KPI's",
+  "title": "SIP KPIs",
   "uid": "Vj1sdPGmz",
-  "version": 140
+  "version": 141
 }
