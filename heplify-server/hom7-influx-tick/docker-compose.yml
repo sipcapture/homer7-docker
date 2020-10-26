@@ -6,7 +6,6 @@ services:
     image: stefanprodan/caddy
     container_name: caddy
     ports:
-      - "3000:3000"
       - "9090:9090"
       - "9093:9093"
       - "9080:9080"
@@ -41,8 +40,8 @@ services:
     image: sipcapture/heplify-server:master
     container_name: heplify-server
     ports:
-      - "9060:9060"
-      - "9060:9060/udp"
+      - "9069:9060"
+      - "9069:9060/udp"
     command:
       - './heplify-server'
     environment:
@@ -60,6 +59,7 @@ services:
       - "HEPLIFYSERVER_PROMTARGETIP="
       - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DBDROPDAYS=7"
+      - "HEPLIFYSERVER_ALEGIDS=X-CID"
     restart: unless-stopped
     expose:
       - 9090
@@ -87,57 +87,53 @@ services:
       db:
         condition: service_healthy
 
-  hepsub:
-    container_name: hepsub
-    image: sipcapture/hepsub:master
-    environment:
-      - "HOMER_IP=homer-webapp"
-      - "PUBLIC_IP=hepsub"
-    links:
-      - homer-webapp
-    ports:
-      - "18088:18088"
-    expose:
-      - 18088
-
   telegraf:
-    image: telegraf:1.5-alpine
+    image: telegraf:1.14-alpine
     restart: unless-stopped
     volumes:
       - ./conf/telegraf.conf:/etc/telegraf/telegraf.conf
     ports:
+      - "8094:8094"
       - "8092:8092/udp"
       - "8125:8125/udp"
     depends_on:
       - heplify-server
 
   influxdb:
-    image: influxdb:1.5-alpine
+    image: influxdb:1.8-alpine
     volumes:
       - ./influx:/var/lib/influxdb
     expose:
       - 8086
 
-  chronograf:
-    image: chronograf:1.5-alpine
+  grafana:
+    image: grafana/grafana:master
+    container_name: grafana
+    volumes:
+      - ./grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
-      INFLUXDB_URL: http://influxdb:8086
-      KAPACITOR_URL: http://kapacitor:9092
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_OAUTH_AUTO_LOGIN=true
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_EXPLORE_ENABLED=true
+#      - GF_INSTALL_PLUGINS=https://github.com/vsergeyev/loudml-grafana-app/raw/master/loudml-grafana-app-latest.zip;loudml-grafana-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
     expose:
-      - 8888
-    links:
-      - influxdb
-      - kapacitor
-
-  kapacitor:
-    image: kapacitor:1.5-alpine
-    environment:
-      KAPACITOR_HOSTNAME: kapacitor
-      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
-    links:
-      - influxdb
-    expose:
-      - 9092
+      - 3000
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/login || exit 1"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    labels:
+      org.label-schema.group: "monitoring"
 
   provisioning:
     image: alpine:latest
@@ -158,12 +154,6 @@ services:
         echo InfluxDB Retention Policy push ...;
         curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE DATABASE homer'
         curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "60s" ON "homer" DURATION 4w REPLICATION 1 DEFAULT'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "300s" ON "homer" DURATION 8w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "3600s" ON "homer" DURATION 16w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "86400s" ON "homer" DURATION 32w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_300s ON homer RESAMPLE EVERY 1m BEGIN SELECT mean(*) INTO homer."300s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(5m),* END'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_3600s ON homer RESAMPLE EVERY 10m BEGIN SELECT mean(*) INTO homer."3600s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(1h),* END'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_86400s ON homer RESAMPLE EVERY 1h BEGIN SELECT mean(*) INTO homer."86400s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(1d),* END'
         curl -G http://influxdb:8086/query --data-urlencode 'q=drop retention policy "autogen" ON "homer"'
         echo Chronograf Dashboard push ...;
         curl -i -X POST -H "Content-Type: application/json" http://chronograf/chronograf/v1/dashboards -d @/tmp/homer_dashboard.json
