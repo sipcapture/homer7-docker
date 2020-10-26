@@ -69,6 +69,17 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  loki:
+    image: grafana/loki:master
+    container_name: loki
+    restart: unless-stopped
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+    labels:
+      org.label-schema.group: "monitoring"
+
   homer-webapp:
     container_name: homer-webapp
     image: sipcapture/webapp
@@ -93,7 +104,8 @@ services:
     volumes:
       - ./conf/telegraf.conf:/etc/telegraf/telegraf.conf
     ports:
-      - "8094:8094"
+      - "8094:8094/udp"
+      - "8094:8094/tcp"
       - "8092:8092/udp"
       - "8125:8125/udp"
     depends_on:
