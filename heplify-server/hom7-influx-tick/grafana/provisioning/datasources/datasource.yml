@@ -5,6 +5,8 @@ apiVersion: 1
 deleteDatasources:
   - name: InfluxDB
     orgId: 1
+  - name: InfluxDB-Telegraf
+    orgId: 1
   - name: Loki
     orgId: 1
 
@@ -14,7 +16,18 @@ datasources:
 - name: InfluxDB
   type: influxdb
   access: proxy
-  database: site
+  database: homer
+  user: grafana
+  url: http://influxdb:8086
+  jsonData:
+    timeInterval: "15s"
+  # <bool> allow users to edit datasources from the UI.
+  editable: true
+
+- name: InfluxDB-Telegraf
+  type: influxdb
+  access: proxy
+  database: telegraf
   user: grafana
   url: http://influxdb:8086
   jsonData:
