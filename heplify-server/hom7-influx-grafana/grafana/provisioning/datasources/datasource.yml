@@ -1,0 +1,42 @@
+# config file version
+apiVersion: 1
+
+# list of datasources that should be deleted from the database
+deleteDatasources:
+  - name: InfluxDB
+    orgId: 1
+  - name: InfluxDB-Telegraf
+    orgId: 1
+  - name: Loki
+    orgId: 1
+
+# list of datasources to insert/update depending
+# whats available in the database
+datasources:
+- name: InfluxDB
+  type: influxdb
+  access: proxy
+  database: homer
+  user: grafana
+  url: http://influxdb:8086
+  jsonData:
+    timeInterval: "15s"
+  # <bool> allow users to edit datasources from the UI.
+  editable: true
+
+- name: InfluxDB-Telegraf
+  type: influxdb
+  access: proxy
+  database: telegraf
+  user: grafana
+  url: http://influxdb:8086
+  jsonData:
+    timeInterval: "15s"
+  # <bool> allow users to edit datasources from the UI.
+  editable: true
+
+- name: Loki
+  type: loki
+  access: proxy
+  url: http://loki:3100
+  editable: true
