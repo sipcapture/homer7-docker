@@ -4,6 +4,11 @@
 
 This bundle provides the latest HEP/HOMER monitoring stack alongside Grafana and InfluxDB/Telegraf to provide DataDog-like statsd functionality out of the box.
 
+![image](https://user-images.githubusercontent.com/1423657/97980210-b743a980-1dd0-11eb-8459-6ccb6c7b4ed1.png)
+
+![image](https://user-images.githubusercontent.com/1423657/97980384-f83bbe00-1dd0-11eb-80fc-167f7549f581.png)
+
+
 ## Setup
 
 ```bash
