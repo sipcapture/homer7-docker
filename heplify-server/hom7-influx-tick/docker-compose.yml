@@ -78,6 +78,8 @@ services:
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+    ports:
+      - "9080:80"
     expose:
       - 80
     restart: unless-stopped
@@ -110,6 +112,8 @@ services:
     environment:
       INFLUXDB_URL: http://influxdb:8086
       KAPACITOR_URL: http://kapacitor:9092
+    ports:
+      - "9088:8888"
     expose:
       - 8888
     links:
@@ -145,12 +149,6 @@ services:
         echo InfluxDB Retention Policy push ...;
         curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE DATABASE homer'
         curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "60s" ON "homer" DURATION 4w REPLICATION 1 DEFAULT'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "300s" ON "homer" DURATION 8w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "3600s" ON "homer" DURATION 16w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE RETENTION POLICY "86400s" ON "homer" DURATION 32w REPLICATION 1'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_300s ON homer RESAMPLE EVERY 1m BEGIN SELECT mean(*) INTO homer."300s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(5m),* END'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_3600s ON homer RESAMPLE EVERY 10m BEGIN SELECT mean(*) INTO homer."3600s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(1h),* END'
-#        curl -G http://influxdb:8086/query --data-urlencode 'q=CREATE CONTINUOUS QUERY cq_86400s ON homer RESAMPLE EVERY 1h BEGIN SELECT mean(*) INTO homer."86400s".:MEASUREMENT FROM homer."60s"./.*/ GROUP BY time(1d),* END'
         curl -G http://influxdb:8086/query --data-urlencode 'q=drop retention policy "autogen" ON "homer"'
         echo Chronograf Dashboard push ...;
         curl -i -X POST -H "Content-Type: application/json" http://chronograf/chronograf/v1/dashboards -d @/tmp/homer_dashboard.json

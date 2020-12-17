@@ -35,6 +35,8 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     expose:
       - 3000
     healthcheck:
@@ -42,23 +44,6 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9080:9080"
-    volumes:
-      - ./caddy/:/etc/caddy/
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
 
@@ -124,6 +109,8 @@ services:
       - "DB_PASS=homerSeven"
       - "PRESET=timescale"
     restart: unless-stopped
+    ports:
+      - "9080:80"
     volumes:
       - ./bootstrap:/app/bootstrap
     depends_on:

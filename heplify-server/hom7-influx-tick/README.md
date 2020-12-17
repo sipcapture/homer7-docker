@@ -14,7 +14,7 @@ to bring up:
 
 * HEPlify-server localhost:9060 (hep-only)
 * Homer localhost:9080 (admin/sipcapture) 
-* Chronograf localhost:9090 (admin/admin)
+* Chronograf localhost:9088 (admin/admin)
   * InfluxDB
   * Kapacitor
   * Telegraf

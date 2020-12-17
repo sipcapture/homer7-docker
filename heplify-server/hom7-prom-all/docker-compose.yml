@@ -79,6 +79,8 @@ services:
     restart: unless-stopped
     expose:
       - 3000
+    ports:
+      - "3000:3000"
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/login || exit 1"]
       interval: 1s
@@ -95,23 +97,6 @@ services:
       - 3100
     ports:
       - "3100:3100"
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9080:9080"
-    volumes:
-      - ./caddy/:/etc/caddy/
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
 
@@ -150,6 +135,7 @@ services:
       - db
     expose:
       - 9090
+      - 9096
     labels:
       org.label-schema.group: "monitoring"
 
@@ -163,6 +149,8 @@ services:
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
     restart: unless-stopped
+    ports:
+      - "9080:80"
     volumes:
       - ./bootstrap:/app/bootstrap
     depends_on:

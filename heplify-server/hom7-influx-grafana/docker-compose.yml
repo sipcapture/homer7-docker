@@ -1,22 +1,6 @@
 version: '2.1'
 
 services:
-  caddy:
-    container_name: caddy
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - "9090:9090"
-      - "9093:9093"
-      - "9080:9080"
-    volumes:
-      - ./caddy/:/etc/caddy/
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
-    labels:
-      org.label-schema.group: "monitoring"
 
   db:
     image: postgres:11-alpine
@@ -89,6 +73,8 @@ services:
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+    ports:
+      - "9090:80"
     expose:
       - 80
     restart: unless-stopped
@@ -133,7 +119,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
-#      - GF_INSTALL_PLUGINS=https://github.com/vsergeyev/loudml-grafana-app/raw/master/loudml-grafana-app-latest.zip;loudml-grafana-app
     restart: unless-stopped
     ports:
       - "3000:3000"
