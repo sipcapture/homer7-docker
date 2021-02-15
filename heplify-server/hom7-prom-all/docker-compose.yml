@@ -90,7 +90,7 @@ services:
       org.label-schema.group: "monitoring"
 
   loki:
-    image: grafana/loki:master
+    image: grafana/loki
     container_name: loki
     restart: unless-stopped
     expose:
@@ -101,7 +101,7 @@ services:
       org.label-schema.group: "monitoring"
 
   heplify-server:
-    image: sipcapture/heplify-server:master
+    image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
       - "9060:9060"
