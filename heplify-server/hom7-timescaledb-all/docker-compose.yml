@@ -64,7 +64,7 @@ services:
       - heplify-server
 
   heplify-server:
-    image: sipcapture/heplify-server:master
+    image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
       - "9060:9060"
