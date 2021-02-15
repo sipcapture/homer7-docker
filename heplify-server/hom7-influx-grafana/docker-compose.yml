@@ -25,11 +25,13 @@ services:
     container_name: heplify-server
     ports:
       - "9069:9060"
-      - "9069:9060/udp"
+      - "9060:9060/udp"
+      - "9061:9061/tcp"
     command:
       - './heplify-server'
     environment:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
+      - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBADDR=db:5432"
