@@ -21,7 +21,7 @@ services:
       retries: 30
 
   heplify-server:
-    image: sipcapture/heplify-server:master
+    image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
       - "9069:9060"
@@ -40,8 +40,8 @@ services:
       - "HEPLIFYSERVER_LOGLVL=debug"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
-      - "HEPLIFYSERVER_PROMTARGETIP="
-      - "HEPLIFYSERVER_PROMTARGETNAME="
+#      - "HEPLIFYSERVER_PROMTARGETIP="
+#      - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DBDROPDAYS=7"
       - "HEPLIFYSERVER_ALEGIDS=X-CID"
     restart: unless-stopped
@@ -54,7 +54,7 @@ services:
       org.label-schema.group: "monitoring"
 
   loki:
-    image: grafana/loki:master
+    image: grafana/loki
     container_name: loki
     restart: unless-stopped
     expose:
