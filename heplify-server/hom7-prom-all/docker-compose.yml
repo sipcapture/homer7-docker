@@ -77,10 +77,8 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
     restart: unless-stopped
-    expose:
-      - 3000
     ports:
-      - "3000:3000"
+      - "9030:3000"
     healthcheck:
       test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3000/login || exit 1"]
       interval: 1s
@@ -111,7 +109,6 @@ services:
       - './heplify-server'
     environment:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
-      - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
