@@ -558,7 +558,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "node_filesystem_free_bytes{device=\"/dev/mapper/storage-homer--maria\",fstype=\"ext4\",instance=\"nodeexporter:9100\",job=\"nodeexporter\",mountpoint=\"/rootfs/var/lib/mysql\"}",
+          "expr": "node_filesystem_free_bytes{instance=\"nodeexporter:9100\",job=\"nodeexporter\",device!~'rootfs'}",
           "format": "time_series",
           "interval": "30s",
           "intervalFactor": 1,
