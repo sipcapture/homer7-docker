@@ -23,6 +23,9 @@ services:
       - 9090
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -37,6 +40,9 @@ services:
       - 9093
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - grafana
 
@@ -58,6 +64,9 @@ services:
       - 9100
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - prometheus
   
@@ -86,6 +95,9 @@ services:
       retries: 30
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   loki:
     image: grafana/loki
@@ -97,6 +109,9 @@ services:
       - "3100:3100"
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   heplify-server:
     image: sipcapture/heplify-server
@@ -136,6 +151,9 @@ services:
       - 9096
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   homer-webapp:
     container_name: homer-webapp
@@ -151,6 +169,9 @@ services:
       - "9080:80"
     volumes:
       - ./bootstrap:/app/bootstrap
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       db:
         condition: service_healthy
@@ -175,5 +196,8 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - grafana
