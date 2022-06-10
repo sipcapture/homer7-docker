@@ -18,6 +18,9 @@ services:
     restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   db:
     image: postgres:11-alpine
@@ -36,6 +39,9 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    logging:
+      options:
+        max-size: "50m"
 
   heplify-server:
     image: sipcapture/heplify-server
@@ -70,6 +76,9 @@ services:
        condition: service_healthy
     labels:
       org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
 
   homer-webapp:
     container_name: homer-webapp
@@ -87,6 +96,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./bootstrap:/app/bootstrap
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       db:
         condition: service_healthy
@@ -99,6 +111,9 @@ services:
     ports:
       - "8092:8092/udp"
       - "8125:8125/udp"
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - heplify-server
 
@@ -108,6 +123,9 @@ services:
       - ./influx:/var/lib/influxdb
     expose:
       - 8086
+    logging:
+      options:
+        max-size: "50m"
 
   chronograf:
     image: chronograf:1.5-alpine
@@ -121,6 +139,9 @@ services:
     links:
       - influxdb
       - kapacitor
+    logging:
+      options:
+        max-size: "50m"
 
   kapacitor:
     image: kapacitor:1.5-alpine
@@ -131,6 +152,9 @@ services:
       - influxdb
     expose:
       - 9092
+    logging:
+      options:
+        max-size: "50m"
 
   provisioning:
     image: alpine:latest
@@ -156,4 +180,6 @@ services:
         curl -i -X POST -H "Content-Type: application/json" http://chronograf/chronograf/v1/dashboards -d @/tmp/homer_dashboard.json
         echo Provisioning completed! Exiting ...;
         poweroff;
-
+    logging:
+      options:
+        max-size: "50m"
