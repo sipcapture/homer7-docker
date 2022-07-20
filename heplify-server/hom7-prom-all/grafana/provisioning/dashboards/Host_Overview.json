@@ -562,7 +562,7 @@
           "format": "time_series",
           "interval": "30s",
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "{{mountpoint}}",
           "refId": "A",
           "step": 30
         }
