@@ -1,6 +1,7 @@
-<img src="https://user-images.githubusercontent.com/1423657/173144443-fc7ba783-d5bf-47f9-bf59-707693da5ed1.png" width=200 />
 
-# 🔎 _qryn oss polyglot demo_
+<img src="https://user-images.githubusercontent.com/1423657/173144443-fc7ba783-d5bf-47f9-bf59-707693da5ed1.png" height=200 /><img src="https://user-images.githubusercontent.com/1423657/193056512-27d9d3e9-1de0-4cd1-a354-fed88daba855.png" height=100>
+
+# 🔎 _homer + qryn oss polyglot demo_
 
 The ultimate **qryn.js** docker demo w/ sample _logs, traces and metrics_ - _batteries included!_
 
@@ -29,6 +30,10 @@ Clone the repository and launch the **qryn** polyglot demo using _docker-compose
 docker-compose pull 
 docker-compose up -d
 ```
+
+#### Send HEP 
+Send some HEP traffic to the HEP socket on port 9060 or run `hepgen.js` to generate some
+
 #### Login 
 Access the preconfigured Grafana instance as `admin/admin`
 ```
