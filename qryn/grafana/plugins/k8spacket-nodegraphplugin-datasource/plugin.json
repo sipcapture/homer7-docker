@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Node Graph Panel API",
+  "id": "k8spacket-nodegraphplugin-datasource",
+  "metrics": true,
+  "routes": [
+    {
+      "path": "apiroute",
+      "url": "{{ .JsonData.baseUrl }}"
+    }
+  ],
+  "info": {
+    "description": "A Datasource plugin transforms JSON API response to data understandable by Grafana Node Graph panel visualization",
+    "author": {
+      "name": "darek.barecki",
+      "url": "https://github.com/k8spacket/node-graph-plugin"
+    },
+    "keywords": [
+      "network",
+      "datasource",
+      "node-graph",
+      "grafana"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/k8spacket/node-graph-plugin"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/k8spacket/node-graph-plugin/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [
+      {
+        "name": "Panel Example",
+        "path": "img/panel.png"
+      }
+    ],
+    "version": "1.0.0",
+    "updated": "2022-04-10"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=8.4.3",
+    "plugins": []
+  }
+}

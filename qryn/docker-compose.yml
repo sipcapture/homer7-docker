@@ -1,0 +1,148 @@
+version: '2.1'
+
+volumes:
+    grafana_data: {}
+    clickhouse_data: {}
+
+services:
+  grafana:
+    image: grafana/grafana-oss:9.1.6
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/plugins/k8spacket-nodegraphplugin-datasource:/var/lib/grafana/plugins/k8spacket-nodegraphplugin-datasource
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_EXPLORE_ENABLED=true
+      - GF_ALERTING_ENABLED=false
+      - GF_UNIFIED_ALERTING_ENABLED=true
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=k8spacket-nodegraphplugin-datasource
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      - clickhouse-server
+    logging:
+      options:
+        max-size: "10m"
+
+  clickhouse-server:
+    image: clickhouse/clickhouse-server:22.8-alpine
+    container_name: clickhouse-server
+    restart: unless-stopped
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./clickhouse/opentelemetry_zipkin.sql:/docker-entrypoint-initdb.d/opentelemetry_zipkin.sql
+    environment:
+      - CLICKHOUSE_USER=qryn
+      - CLICKHOUSE_PASSWORD=demo
+    ports:
+      - 8123:8123
+      - 9000:9000
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', '127.0.0.1:8123/ping']
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    logging:
+      options:
+        max-size: "10m"
+
+  qryn:
+    image: qxip/qryn:latest
+    container_name: qryn
+    restart: unless-stopped
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+    environment:
+      - CLICKHOUSE_SERVER=clickhouse-server
+      - CLICKHOUSE_AUTH=qryn:demo
+#      - LOG_LEVEL=debug
+      - NODE_OPTIONS="--max-old-space-size=4096"
+      - ALERTMAN_URL=http://alertman:9093
+    depends_on:
+       clickhouse-server:
+         condition: service_healthy
+    logging:
+      options:
+        max-size: "10m"
+
+  vector:
+    image: timberio/vector:latest-alpine
+    container_name: vector
+    restart: unless-stopped
+    volumes:
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    depends_on:
+      - qryn
+    logging:
+      options:
+        max-size: "10m"
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    hostname: mailhog
+    expose:
+      - 1025
+      - 8025
+#    ports:
+#      - "8025:8025"
+    logging:
+      options:
+        max-size: "10m"
+
+  alertman:
+    image: prom/alertmanager:latest
+    container_name: alertman
+    hostname: alertman
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    expose:
+      - 9093
+    ports:
+      - 9093:9093
+    logging:
+      options:
+        max-size: "10m"
+
+  heplify-server:
+    image: sipcapture/heplify-server
+    container_name: heplify-server
+    ports:
+      - "9060:9060"
+      - "9096:9096"
+      - "9060:9060/udp"
+      - "9061:9061/tcp"
+    command:
+      - './heplify-server'
+    environment:
+      - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
+      - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_DBSHEMA=mock"
+      - "HEPLIFYSERVER_DBDRIVER=mock"
+      - "HEPLIFYSERVER_DBADDR="
+      - "HEPLIFYSERVER_LOGLVL=info"
+      - "HEPLIFYSERVER_LOGSTD=true"
+      - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
+      - "HEPLIFYSERVER_DEDUP=false"
+      - "HEPLIFYSERVER_LOKIURL=http://qryn:3100/loki/api/v1/push"
+      - "HEPLIFYSERVER_LOKITIMER=1"
+    restart: unless-stopped
+    depends_on:
+      - qryn
+      - clickhouse-server
+    expose:
+      - 9060
+      - 9090
+      - 9096
+    logging:
+      options:
+        max-size: "50m"
+

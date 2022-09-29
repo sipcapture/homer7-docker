@@ -1,0 +1,80 @@
+# config file version
+apiVersion: 1
+
+# List of rule groups to import or update
+groups:
+  # <int> organization ID, default = 1
+  - orgId: 1
+    # <string, required> name of the rule group
+    name: fake
+    # <string, required> name of the folder the rule group will be stored in
+    folder: alerts
+    # <duration, required> interval that the rule group should evaluated at
+    interval: 30s
+    # <list, required> list of rules that are part of the rule group
+    rules:
+      # <string, required> unique identifier for the rule
+      - uid: L-fhFtW4k
+        # <string, required> title of the rule that will be displayed in the UI
+        title: Demo_Rule
+        # <string, required> which query should be used for the condition
+        condition: B
+        # <list, required> list of query objects that should be executed on each
+        #                  evaluation - should be obtained trough the API
+        data:
+          - refId: A
+            datasourceUid: 'loki'
+            relativeTimeRange:
+              from: 300
+              to: 0
+            model:
+              editorMode: code
+              expr: "count_over_time({level=\"error\"} [20s])"
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+              type: range
+          - refId: B
+            datasourceUid: '-100'
+            relativeTimeRange:
+              from: 0
+              to: 0
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: '-100'
+              expression: A
+              hide: false
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: classic_conditions
+        # <string> the state the alert rule will have when no data is returned
+        #          possible values: "NoData", "Alerting", "OK", default = NoData
+        noDataState: Alerting
+        # <string> the state the alert rule will have when the query execution
+        #          failed - possible values: "Error", "Alerting", "OK"
+        #          default = Alerting
+        # <duration, required> for how long should the alert fire before alerting
+        for: 20s
+        # <map<string, string>> a map of strings to pass around any data
+        annotations:
+          summary: 'Should fire intermittently'
+        # <map<string, string> a map of strings that can be used to filter and
+        #                      route alerts
+        labels:
+          level: error

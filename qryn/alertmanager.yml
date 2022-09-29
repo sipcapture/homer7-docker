@@ -1,0 +1,66 @@
+global:
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost: 'mailhog:1025'
+  smtp_from: 'alertmanager@example.org'
+  smtp_require_tls: false
+
+# The directory from which notification templates are read.
+templates:
+  - '/etc/alertmanager/template/*.tmpl'
+
+# The root route on which each incoming alert enters.
+route:
+  # The labels by which incoming alerts are grouped together. For example,
+  # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+  # be batched into a single group.
+  #
+  # To aggregate by all possible labels use '...' as the sole label name.
+  # This effectively disables aggregation entirely, passing through all
+  # alerts as-is. This is unlikely to be what you want, unless you have
+  # a very low alert volume or your upstream notification system performs
+  # its own grouping. Example: group_by: [...]
+  group_by: ['alertname', 'cluster', 'service']
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 30s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 30s
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 1m
+
+  # A default receiver
+  receiver: team-X-mails
+
+  # All the above attributes are inherited by all child routes and can
+  # overwritten on each.
+
+receivers:
+  - name: 'team-X-mails'
+    email_configs:
+      - to: 'team-X+alerts@example.org'
+
+  - name: 'team-X-pager'
+    email_configs:
+      - to: 'team-X+alerts-critical@example.org'
+    pagerduty_configs:
+      - service_key: <team-X-key>
+
+  - name: 'team-Y-mails'
+    email_configs:
+      - to: 'team-Y+alerts@example.org'
+
+  - name: 'team-Y-pager'
+    pagerduty_configs:
+      - service_key: <team-Y-key>
+
+  - name: 'team-DB-pager'
+    pagerduty_configs:
+      - service_key: <team-DB-key>
