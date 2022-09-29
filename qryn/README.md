@@ -32,7 +32,7 @@ docker-compose up -d
 ```
 
 #### Send HEP 
-Send some HEP traffic to the HEP socket on port 9060 or run `hepgen.js` to generate some
+Send some HEP traffic to the HEP socket on port 9060 or use `hepgen` generated traffic
 
 #### Login 
 Access the preconfigured Grafana instance as `admin/admin`
