@@ -1,9 +1,9 @@
 
-<img src="https://user-images.githubusercontent.com/1423657/173144443-fc7ba783-d5bf-47f9-bf59-707693da5ed1.png" height=200 /><img src="https://user-images.githubusercontent.com/1423657/193056512-27d9d3e9-1de0-4cd1-a354-fed88daba855.png" height=100>
+<img src="https://user-images.githubusercontent.com/1423657/173144443-fc7ba783-d5bf-47f9-bf59-707693da5ed1.png" height=150 /><img src="https://user-images.githubusercontent.com/1423657/193056512-27d9d3e9-1de0-4cd1-a354-fed88daba855.png" height=100>
 
 # 🔎 _homer + qryn oss polyglot demo_
 
-The ultimate **qryn.js** docker demo w/ sample _logs, traces and metrics_ - _batteries included!_
+The ultimate **qryn.js** + **hep** docker demo w/ sample _logs, traces and metrics_ - _batteries included!_
 
 <br />
 <a href="https://qryn.metrico.in" target="_blank">
