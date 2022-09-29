@@ -5,6 +5,8 @@
 # HOMER + qryn + Grafana
 The ultimate **qryn.js** + **homer** docker demo w/ sample _hep traffic, logs, traces and metrics_ - _batteries included!_
 
+All the backend features for all protocols are provided by **qryn** itself, emulating _prometheus, loki, tempo APIs and much more_
+
 <br />
 
 
