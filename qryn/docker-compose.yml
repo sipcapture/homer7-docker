@@ -112,6 +112,32 @@ services:
       options:
         max-size: "10m"
 
+  hepgen:
+    image: qxip/docker-hepgen
+    container_name: hepgen
+    environment:
+    - "HEP_SERVER=heplify-server"
+    - "HEP_PORT=9060"
+    - "LOOP=5"
+    restart: unless-stopped
+    depends_on:
+      - qryn
+      - clickhouse-server
+
+  hepgen-bad:
+    image: qxip/docker-hepgen
+    container_name: hepgen-bad
+    environment:
+    - "HEP_SERVER=heplify-server"
+    - "HEP_PORT=9060"
+    - "LOOP=1"
+    - "SLEEP=30"
+    - "HEP_CONFIG=b2bcall_rtcp_bad.js"
+    restart: unless-stopped
+    depends_on:
+      - qryn
+      - clickhouse-server
+
   heplify-server:
     image: sipcapture/heplify-server
     container_name: heplify-server
