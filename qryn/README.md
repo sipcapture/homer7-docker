@@ -1,5 +1,4 @@
-
-![image](https://user-images.githubusercontent.com/1423657/193228934-2efaedf0-34a8-416e-b2ff-af225d7be7e9.png)
+<img src="https://user-images.githubusercontent.com/1423657/193228934-2efaedf0-34a8-416e-b2ff-af225d7be7e9.png" width=400>
 
 # HOMER + qryn-oss
 The ultimate **qryn.js** + **homer** docker demo w/ sample _hep traffic, logs, traces and metrics_ - _batteries included!_ :battery::battery:
