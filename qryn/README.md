@@ -1,4 +1,5 @@
-<img src="https://github.com/sipcapture/homer7-docker/assets/1423657/54ef0bf2-2ea3-41bd-8b19-f683640db9b1" width=270>
+<img src="https://github.com/sipcapture/homer7-docker/assets/1423657/36a8e515-ab0e-482b-bf49-2156e290c764" width=270>
+
 
 # homer + qryn.dev
 The ultimate **qryn.js** + **homer** docker demo w/ sample _hep traffic, logs, traces and metrics_ - _batteries included!_ :battery::battery:
