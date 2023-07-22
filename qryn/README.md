@@ -2,7 +2,7 @@
 
 
 # homer + qryn.dev
-The ultimate **qryn.js** + **homer** docker demo w/ sample _hep traffic, logs, traces and metrics_ - _batteries included!_ :battery::battery:
+The ultimate  **homer** + **qryn.js** docker demo w/ sample _hep traffic, logs, traces and metrics_ - _batteries included!_ :battery::battery:
 
 > All the backend features for all supported protocols are provided by **qryn** and **clickhouse** - no other components required!
 
