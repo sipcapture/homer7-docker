@@ -140,7 +140,7 @@ services:
       - clickhouse-server
 
   heplify-server:
-    image: sipcapture/heplify-server
+    image: ghcr.io/sipcapture/heplify-server:latest
     container_name: heplify-server
     ports:
       - "9060:9060"
@@ -161,7 +161,7 @@ services:
       - "HEPLIFYSERVER_DEDUP=false"
       - "HEPLIFYSERVER_LOKIURL=http://qryn:3100/loki/api/v1/push"
       - "HEPLIFYSERVER_LOKITIMER=1"
-      - "HEPLIFYSERVER_LOKIPORTLABELS=true"
+      - "HEPLIFYSERVER_LOKIIPPORTLABELS=true"
     restart: unless-stopped
     depends_on:
       - qryn
