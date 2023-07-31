@@ -21,7 +21,7 @@ services:
       - GF_ALERTING_ENABLED=false
       - GF_UNIFIED_ALERTING_ENABLED=true
       - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=qxip-flow-panel
-      - GF_INSTALL_PLUGINS=https://github.com/metrico/grafana-flow/releases/download/v10.0.3/qxip-flow-panel-10.0.3.zip;qxip-flow-panel"
+      - GF_INSTALL_PLUGINS=https://github.com/metrico/grafana-flow/releases/download/v10.0.6/qxip-flow-panel-10.0.6.zip;qxip-flow-panel"
     restart: unless-stopped
     ports:
       - 3000:3000
