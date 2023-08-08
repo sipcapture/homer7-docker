@@ -26,6 +26,9 @@ datasources:
           matcherRegex: "^.*?\"traceID\":\"(\\w+)\".*$"
           name: traceID
           url: '$${__value.raw}'
+        - name: callid
+          matcherRegex: ".*?[c|C]all-ID:\s?(.*)(?:\r|\n|\r\n)"
+          url: '/d/c10b3643-9226-439b-a508-14dd61916889/call-flow?var-search=$${__value.raw}'
   - name: Tempo
     type: tempo
     access: proxy
