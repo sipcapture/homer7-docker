@@ -121,6 +121,8 @@ services:
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
       - "PRESET=timescale"
+      - "ENABLE_AUTH_TOKEN_ACCESS=false"
+      - "AUTH_TOKEN_HEADER=Auth-Token"
     restart: unless-stopped
     ports:
       - "9080:80"
