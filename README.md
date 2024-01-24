@@ -1,28 +1,53 @@
-
 <img src="https://user-images.githubusercontent.com/1423657/55069501-8348c400-5084-11e9-9931-fefe0f9874a7.png" width=200/>
 
-# HOMER 7 Docker Containers
-http://sipcapture.org
+# HOMER + Grafana + Prometheus + Loki
 
-This repository provides ready-to-run [HOMER](https://github.com/sipcapture/homer/tree/homer) recipes using `Docker` and [docker-compose](https://docs.docker.com/compose/install/)
+<img src="https://i.imgur.com/Atdig3X.gif" width=500>
+<img src="https://user-images.githubusercontent.com/1423657/50036716-4bed6480-000b-11e9-98bd-81a78cd54251.png" width=500>
 
-### Running Containers
+#### BETA VERSION! PLEASE REPORT BUGS AND IMPROVEMENTS
 
-To start your own bundle or choice, just run the following command inside the selected directory:
+--------
+
+## Setup
 
 ```bash
-$ docker-compose up -d
+docker-compose up -d
 ```
 
-#### Data Mapping
+to bring up:  
 
-The `docker-compose` scheme will map container data into local directory volumes. Check and extend the provided examples accordingly.
+* [Homer]        localhost:9080 (admin/sipcapture)
+* [Grafana]      localhost:3000 (admin/admin)
+* [Prometheus]   localhost:9090 (admin/admin)
+* [Loki]         localhost:3100 (admin/admin)
+* [Alertmanager] localhost:9093 (admin/admin)
 
+When the Grafana dashboard autoprovisioning does not work for you make sure you have no old grafana volumes.
 
-----
+## Configuration
 
-#### Made by Humans
-This Open-Source project is made possible by actual Humans without corporate sponsors, angels or patreons.<br>
-If you use this software in production, please consider supporting its development with contributions or [donations](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=donation%40sipcapture%2eorg&lc=US&item_name=SIPCAPTURE&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest)
+When you change some files inside the Prometheus or Alertmanager folder you can reload them without interruption.
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=donation%40sipcapture%2eorg&lc=US&item_name=SIPCAPTURE&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest) 
+#### Prometheus
+```bash
+curl -s -XPOST localhost:9090/-/reload -u admin:admin
+```
+
+#### Alertmanager
+```bash
+curl -s -XPOST localhost:9093/-/reload -u admin:admin
+```
+
+#### Service
+When you need to change the docker-compose file i.e to setup smtp for Grafana:
+```bash
+docker-compose up -d
+```
+Docker will only restart the service you changed inside the docker-compose file. 
+
+#### Reinstall, Reset
+To reset and cause db provisioning, simply empty out the `bootstrap` file
+```
+echo "" > ./bootstrap
+```
