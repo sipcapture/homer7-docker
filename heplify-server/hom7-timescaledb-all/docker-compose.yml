@@ -117,6 +117,22 @@ services:
       options:
         max-size: "50m"
 
+  loki:
+    image: grafana/loki
+    container_name: loki
+    restart: unless-stopped
+    volumes:
+      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
+    expose:
+      - 3100
+    ports:
+      - "3100:3100"
+    labels:
+      org.label-schema.group: "monitoring"
+    logging:
+      options:
+        max-size: "50m"
+
   homer-webapp:
     container_name: homer-webapp
     image: sipcapture/webapp
