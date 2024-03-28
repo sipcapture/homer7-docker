@@ -88,7 +88,6 @@ services:
     container_name: homer-webapp
     image: sipcapture/webapp
     environment:
-      - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
       - "DB_HOST=db"
       - "DB_USER=root"
