@@ -1,39 +1,12 @@
 {
-  "__inputs": [
-    {
-      "name": "Prometheus",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "5.2.0"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "5.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -43,27 +16,120 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": null,
-  "iteration": 1532083872497,
   "links": [],
   "panels": [
     {
-      "aliasColors": {
-        "SER (ASR) current": "#bf1b00",
-        "SER (ASR) last week": "#ea6460"
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cMoIj6tGz"
       },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": 1,
       "description": "SIP\n\nSER = Session Establishment Ratio\n\n``` \n           # of INVITE Requests \n            w/ associated 200 OK\nSER = ----------------------------------- x 100\n         (Total # of INVITE Requests) -\n   \t(# of INVITE Requests w/ 3XX Response)\n```\nsimilar to\n\nE.411\n\nASR = Answer Seizure Ratio\n\nGenerally measured at originating UA only.\n\nhttps://tools.ietf.org/html/rfc6076#section-4.6",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SER (ASR) current"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#bf1b00",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SER (ASR) last week"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ea6460",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SER (ASR) last week"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 20
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -71,38 +137,29 @@
         "y": 0
       },
       "id": 6,
-      "isNew": true,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": false,
-        "min": true,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "SER (ASR) last week",
-          "fill": 2,
-          "linewidth": 0
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
         }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      },
+      "pluginVersion": "10.4.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"200\"}[30m])) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m])) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[30m])) or sum(up) * 0)), 100)",
           "format": "time_series",
           "hide": false,
@@ -112,6 +169,10 @@
           "step": 10
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"200\"}[30m] offset 1w)) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m] offset 1w)) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[30m] offset 1w)) or sum(up) * 0)), 100)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -119,63 +180,119 @@
           "refId": "B"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "SER (ASR)",
-      "tooltip": {
-        "msResolution": true,
-        "shared": true,
-        "sort": 2,
-        "value_type": "cumulative"
-      },
-      "transparent": false,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "label": null,
-          "logBase": 1,
-          "max": "100",
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {
-        "SEER (NER) current": "#0a437c",
-        "SEER (NER) last week": "#447ebc"
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cMoIj6tGz"
       },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": 1,
       "description": "SIP\n\nSEER = Session Establishment Effectiveness Ratio\n\n```\n# of INVITE Requests w/ associated \n 200, 480, 486, 600, or 603\n--------------------------------- x 100\n(Total # of INVITE Requests) -\n  (# of INVITE Requests w/ 3XX Response)\n```\nsimilar to E.411\n\nNER = Network Effectiveness Ratio\n\nhttps://tools.ietf.org/html/rfc6076#section-4.7",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SEER (NER) current"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#0a437c",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SEER (NER) last week"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#447ebc",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SEER (NER) last week"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 20
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -183,38 +300,29 @@
         "y": 7
       },
       "id": 8,
-      "isNew": true,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": false,
-        "min": true,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "SEER (NER) last week",
-          "fill": 2,
-          "linewidth": 0
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
         }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      },
+      "pluginVersion": "10.4.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"200|480|486|600|603\"}[30m])) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m])) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[30m])) or sum(up) * 0)), 100)",
           "format": "time_series",
           "intervalFactor": 4,
@@ -222,6 +330,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"200|480|486|600|603\"}[30m] offset 1w)) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m] offset 1w)) - \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"3.*|401|407\"}[30m] offset 1w)) or sum(up) * 0)), 100)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -229,63 +341,119 @@
           "refId": "A"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "SEER (NER)",
-      "tooltip": {
-        "msResolution": true,
-        "shared": true,
-        "sort": 2,
-        "value_type": "cumulative"
-      },
-      "transparent": false,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "label": null,
-          "logBase": 1,
-          "max": "100",
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {
-        "SCR current": "#6d1f62",
-        "SCR last week": "#d683ce"
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cMoIj6tGz"
       },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": 1,
       "description": "SIP\n\nSCR = Session Completion Ratio\n\n```\n       # of Successfully Completed Sessions\nSCR % = ----------------------------------- x 100\n            Total # of Session Requests\n```\nsimilar to E.411\n\nCCR = Call Completion Ratio\n\nhttps://tools.ietf.org/html/rfc6076#section-4.9",
-      "editable": true,
-      "error": false,
-      "fill": 0,
-      "grid": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SCR current"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#6d1f62",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SCR last week"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#d683ce",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SCR last week"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 20
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -293,38 +461,29 @@
         "y": 14
       },
       "id": 9,
-      "isNew": true,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": false,
-        "min": true,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "SCR last week",
-          "fill": 2,
-          "linewidth": 0
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
         }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      },
+      "pluginVersion": "10.4.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"BYE\", response=\"200\"}[30m])) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m]))), 100)",
           "format": "time_series",
           "intervalFactor": 4,
@@ -332,6 +491,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"BYE\", response=\"200\"}[30m] offset 1w)) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m] offset 1w))), 100)",
           "format": "time_series",
           "intervalFactor": 1,
@@ -339,60 +502,70 @@
           "refId": "A"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "SCR",
-      "tooltip": {
-        "msResolution": true,
-        "shared": true,
-        "sort": 2,
-        "value_type": "cumulative"
-      },
-      "transparent": false,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "label": null,
-          "logBase": 1,
-          "max": "100",
-          "min": "0",
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "decimals": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "cMoIj6tGz"
+      },
       "description": "SIP\n\nIRA = Ineffective Registration Attempts\n```\n\n                  # of IRAs\nIRA % = ----------------------------- x 100\n         Total # of REGISTER Requests\n```\nhttps://tools.ietf.org/html/rfc6076#section-4.2\n\nISA = Ineffective Session Attempts\n```\n                # of ISAs\nISA % = ----------------------------- x 100\n       Total # of Session Requests\n```\nhttps://tools.ietf.org/html/rfc6076#section-4.8\n",
-      "editable": true,
-      "error": false,
-      "fill": 1,
-      "grid": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 7,
         "w": 24,
@@ -401,32 +574,29 @@
       },
       "hideTimeOverride": false,
       "id": 7,
-      "isNew": true,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": false,
-        "min": true,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": true
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "lastNotNull",
+            "min"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null as zero",
-      "percentage": false,
-      "pointradius": 5,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "pluginVersion": "10.4.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max(((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\", response=~\"4.*|5.*|6.*\"}[30m])) - \nsum(increase(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\", response=~\"401|402|407\"}[30m]))) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"REGISTER\", response=\"REGISTER\"}[30m]))), 100)",
           "format": "time_series",
           "interval": "",
@@ -437,6 +607,10 @@
           "step": 10
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "cMoIj6tGz"
+          },
           "expr": "clamp_max((sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=~\"408|500|503|504\"}[30m])) * 100) / \n(sum(increase(heplify_method_response{target_name=~\"$tn\", method=\"INVITE\", response=\"INVITE\"}[30m]))), 100)",
           "format": "time_series",
           "intervalFactor": 4,
@@ -444,60 +618,29 @@
           "refId": "B"
         }
       ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
       "title": "IRA & ISA",
-      "tooltip": {
-        "msResolution": true,
-        "shared": true,
-        "sort": 2,
-        "value_type": "cumulative"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "percent",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
-  "schemaVersion": 16,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [
     "sip"
   ],
   "templating": {
     "list": [
       {
-        "allValue": null,
-        "current": {},
-        "datasource": "Prometheus",
+        "current": {
+          "isNone": true,
+          "selected": true,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "cMoIj6tGz"
+        },
+        "definition": "",
         "hide": 0,
         "includeAll": false,
         "label": "interface_name",
@@ -507,9 +650,9 @@
         "query": "label_values(heplify_method_response, target_name)",
         "refresh": 1,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -548,5 +691,6 @@
   "timezone": "browser",
   "title": "SIP KPIs",
   "uid": "Vj1sdPGmz",
-  "version": 141
+  "version": 2035467,
+  "weekStart": ""
 }

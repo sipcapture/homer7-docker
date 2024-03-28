@@ -81,6 +81,7 @@ services:
     container_name: loki
     volumes:
       - ./conf/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
+      - ./lokidata/:/loki
     restart: unless-stopped
     expose:
       - 3100
