@@ -69,6 +69,8 @@ services:
     image: grafana/loki
     container_name: loki
     restart: unless-stopped
+    volumes:
+      - ./loki/loki-local-config.yaml:/etc/loki/loki-local-config.yaml
     expose:
       - 3100
     ports:
