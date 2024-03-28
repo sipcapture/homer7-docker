@@ -88,6 +88,7 @@ services:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_TLSCERTFOLDER=certs"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBADDR=db:5432"
@@ -98,11 +99,13 @@ services:
       - "HEPLIFYSERVER_DBDROPDAYS=5"
       - "HEPLIFYSERVER_DBROTATE=true"
       - "HEPLIFYSERVER_LOGLVL=info"
+#      - "HEPLIFYSERVER_LOGDBG=rotator"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
       - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
       - "HEPLIFYSERVER_PROMTARGETNAME=local"
       - "HEPLIFYSERVER_DEDUP=false"
+#      - "HEPLIFYSERVER_SIPHEADER=callid,method,ruri_user,ruri_domain,from_user,from_domain,from_tag,to_user,to_domain,to_tag,contact_user,cseq"
     restart: unless-stopped
     depends_on:
       - db
