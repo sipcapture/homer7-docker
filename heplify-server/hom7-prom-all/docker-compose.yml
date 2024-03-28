@@ -6,6 +6,7 @@ volumes:
 
 services:
   prometheus:
+    # hostname: prometheus
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
@@ -28,6 +29,7 @@ services:
         max-size: "50m"
 
   alertmanager:
+    # hostname: alert
     image: prom/alertmanager:latest
     container_name: alertmanager
     volumes: 
@@ -47,6 +49,7 @@ services:
       - grafana
 
   nodeexporter:
+    # hostname: nodeexporter
     image: prom/node-exporter:latest
     container_name: nodeexporter
     user: root
@@ -71,6 +74,7 @@ services:
       - prometheus
   
   grafana:
+    # hostname: grafana
     image: grafana/grafana:master
     container_name: grafana
     volumes:
@@ -103,6 +107,7 @@ services:
         max-size: "50m"
 
   loki:
+    # hostname: loki
     image: grafana/loki
     container_name: loki
     restart: unless-stopped
@@ -117,6 +122,7 @@ services:
         max-size: "50m"
 
   heplify-server:
+    # hostname: heplify
     image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
@@ -163,6 +169,7 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
     image: sipcapture/webapp
     environment:
@@ -186,6 +193,7 @@ services:
         condition: service_healthy
 
   db:
+    # hostname: db
     container_name: db
     image: postgres:11-alpine
     environment:

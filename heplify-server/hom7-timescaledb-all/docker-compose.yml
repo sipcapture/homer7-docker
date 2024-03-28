@@ -6,6 +6,7 @@ volumes:
 
 services:
   alertmanager:
+    # hostname: alertmanager
     image: prom/alertmanager:latest
     container_name: alertmanager
     volumes: 
@@ -23,6 +24,7 @@ services:
         max-size: "50m"
 
   grafana:
+    # hostname: grafana
     image: grafana/grafana:master
     container_name: grafana
     volumes:
@@ -57,6 +59,7 @@ services:
         max-size: "50m"
 
   telegraf:
+    # hostname: telegraf
     image: sipcapture/telegraf-timescale
     restart: unless-stopped
     environment:
@@ -76,6 +79,7 @@ services:
       - heplify-server
 
   heplify-server:
+    # hostname: heplify
     image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
@@ -118,6 +122,7 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
     image: sipcapture/webapp
     environment:
@@ -142,6 +147,7 @@ services:
         condition: service_healthy
 
   db:
+    # hostname: db
     container_name: db
     image: timescale/timescaledb:latest-pg11
     restart: always

@@ -23,6 +23,7 @@ services:
         max-size: "50m"
 
   db:
+    # hostname: db
     image: postgres:11-alpine
     restart: always
     environment:
@@ -44,6 +45,7 @@ services:
         max-size: "50m"
 
   heplify-server:
+    # hostname: heplify
     image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
@@ -85,6 +87,7 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
     image: sipcapture/webapp
     environment:
@@ -108,6 +111,7 @@ services:
         condition: service_healthy
 
   telegraf:
+    # hostname: telegraf
     image: telegraf:1.5-alpine
     restart: unless-stopped
     volumes:
@@ -122,6 +126,7 @@ services:
       - heplify-server
 
   influxdb:
+    # hostname: influxdb
     image: influxdb:1.5-alpine
     volumes:
       - ./influx:/var/lib/influxdb
@@ -132,6 +137,7 @@ services:
         max-size: "50m"
 
   chronograf:
+    # hostname: chronograf
     image: chronograf:1.5-alpine
     environment:
       INFLUXDB_URL: http://influxdb:8086
@@ -148,6 +154,7 @@ services:
         max-size: "50m"
 
   kapacitor:
+    # hostname: kapacitor
     image: kapacitor:1.5-alpine
     environment:
       KAPACITOR_HOSTNAME: kapacitor
