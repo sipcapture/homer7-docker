@@ -17,3 +17,16 @@ scrape_configs:
     labels:
       job: varlogs
       __path__: /var/log/*log
+## Must allow port 1514:1514(/udp) in compose file
+# - job_name: syslog
+#   syslog:
+#       listen_address: 0.0.0.0:1514
+#       idle_timeout: 60s
+#       label_structured_data: yes
+#       labels:
+#         job: "syslog"
+#   relabel_configs:
+#       - source_labels: ['__syslog_message_hostname']
+#         target_label: 'host'
+#       - source_labels: ['__syslog_message_app_name']
+#         target_label: 'app'
