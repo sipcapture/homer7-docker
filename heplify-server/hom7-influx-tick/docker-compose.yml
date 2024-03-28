@@ -89,13 +89,16 @@ services:
   homer-webapp:
     # hostname: homer
     container_name: homer-webapp
-    image: sipcapture/webapp
+    image: ghcr.io/sipcapture/homer-app
     environment:
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
+#      - "GRAFANA_HOST=grafana"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+      - "DB_KEEPALIVE=false"
+      - "HOMER_LOGLEVEL=info"
     ports:
       - "9080:80"
     expose:

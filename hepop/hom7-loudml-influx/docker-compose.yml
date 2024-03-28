@@ -65,7 +65,7 @@ heplify-server:
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/homer-app:server
+    image: ghcr.io/sipcapture/homer-app
     environment:
       - "DB_HOST=db"
       - "DB_USER=root"
