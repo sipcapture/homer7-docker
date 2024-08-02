@@ -164,6 +164,7 @@ services:
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+      - "LDAP_USERGROUP=homer_db_user"
     restart: unless-stopped
     ports:
       - "9080:80"
