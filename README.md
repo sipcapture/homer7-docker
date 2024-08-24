@@ -4,7 +4,7 @@
 # HOMER 7 Docker Containers
 http://sipcapture.org
 
-This repository provides ready-to-run [HOMER](https://github.com/sipcapture/homer/tree/homer) recipes using `Docker` and [docker-compose](https://docs.docker.com/compose/install/)
+This repository provides ready-to-run [HOMER](https://github.com/sipcapture/homer) recipes using `Docker` and [docker-compose](https://docs.docker.com/compose/install/)
 
 ### Running Containers
 
