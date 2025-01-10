@@ -114,7 +114,7 @@ services:
         max-size: "50m"
 
   heplify-server:
-    image: sipcapture/heplify-server
+    image: ghcr.io/sipcapture/heplify-server
     container_name: heplify-server
     ports:
       - "9060:9060"
@@ -157,7 +157,7 @@ services:
 
   homer-webapp:
     container_name: homer-webapp
-    image: sipcapture/webapp
+    image: ghcr.io/sipcapture/homer-app
     environment:
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
