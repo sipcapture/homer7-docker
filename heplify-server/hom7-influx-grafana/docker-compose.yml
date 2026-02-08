@@ -3,6 +3,7 @@ version: '2.1'
 services:
 
   db:
+    # hostname: db
     image: postgres:11-alpine
     environment:
       POSTGRES_PASSWORD: homerSeven
@@ -23,6 +24,7 @@ services:
         max-size: "50m"
 
   heplify-server:
+    # hostname: heplify
     image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
@@ -34,6 +36,8 @@ services:
     environment:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_TLSCERTFOLDER=certs"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBADDR=db:5432"
@@ -42,12 +46,14 @@ services:
       - "HEPLIFYSERVER_DBDATATABLE=homer_data"
       - "HEPLIFYSERVER_DBROTATE=true"
       - "HEPLIFYSERVER_LOGLVL=debug"
+#      - "HEPLIFYSERVER_LOGDBG=rotator"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
 #      - "HEPLIFYSERVER_PROMTARGETIP="
 #      - "HEPLIFYSERVER_PROMTARGETNAME="
       - "HEPLIFYSERVER_DBDROPDAYS=7"
       - "HEPLIFYSERVER_ALEGIDS=X-CID"
+#      - "HEPLIFYSERVER_SIPHEADER=callid,method,ruri_user,ruri_domain,from_user,from_domain,from_tag,to_user,to_domain,to_tag,contact_user,cseq"
     restart: unless-stopped
     expose:
       - 9090
@@ -61,6 +67,7 @@ services:
         max-size: "50m"
 
   loki:
+    # hostname: loki
     image: grafana/loki
     container_name: loki
     restart: unless-stopped
@@ -75,14 +82,18 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
-    image: sipcapture/webapp
+    image: ghcr.io/sipcapture/homer-app
     environment:
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
+#      - "GRAFANA_HOST=grafana"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+      - "DB_KEEPALIVE=false"
+      - "HOMER_LOGLEVEL=info"
     ports:
       - "9090:80"
     expose:
@@ -98,6 +109,7 @@ services:
         max-size: "50m"
 
   telegraf:
+    # hostname: telegraf
     image: telegraf:1.14-alpine
     restart: unless-stopped
     volumes:
@@ -114,6 +126,7 @@ services:
         max-size: "50m"
 
   influxdb:
+    # hostname: influxdb
     image: influxdb:1.8-alpine
     volumes:
       - ./influx:/var/lib/influxdb
@@ -124,11 +137,14 @@ services:
         max-size: "50m"
 
   grafana:
+    # hostname: grafana
     image: grafana/grafana:master
     container_name: grafana
     volumes:
       - ./grafana_data:/var/lib/grafana
+      - ./grafana_plugins:/var/lib/grafana/plugins
       - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/:/etc/grafana/
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -138,6 +154,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
+#      - GF_INSTALL_PLUGINS=some-plugin
     restart: unless-stopped
     ports:
       - "3000:3000"
