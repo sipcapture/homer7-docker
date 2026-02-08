@@ -122,8 +122,7 @@ services:
         max-size: "50m"
 
   heplify-server:
-    # hostname: heplify
-    image: sipcapture/heplify-server
+    image: ghcr.io/sipcapture/heplify-server
     container_name: heplify-server
     ports:
       - "9060:9060"
