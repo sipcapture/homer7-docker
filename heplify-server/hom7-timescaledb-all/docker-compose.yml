@@ -6,6 +6,7 @@ volumes:
 
 services:
   alertmanager:
+    # hostname: alertmanager
     image: prom/alertmanager:latest
     container_name: alertmanager
     volumes: 
@@ -23,11 +24,14 @@ services:
         max-size: "50m"
 
   grafana:
+    # hostname: grafana
     image: grafana/grafana:master
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana_plugins:/var/lib/grafana/plugins
       - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/:/etc/grafana/
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -37,6 +41,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
+#      - GF_INSTALL_PLUGINS=some-plugin
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -54,6 +59,7 @@ services:
         max-size: "50m"
 
   telegraf:
+    # hostname: telegraf
     image: sipcapture/telegraf-timescale
     restart: unless-stopped
     environment:
@@ -73,6 +79,7 @@ services:
       - heplify-server
 
   heplify-server:
+    # hostname: heplify
     image: sipcapture/heplify-server
     container_name: heplify-server
     ports:
@@ -85,6 +92,7 @@ services:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9061"
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_TLSCERTFOLDER=certs"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBADDR=db:5432"
@@ -95,11 +103,13 @@ services:
       - "HEPLIFYSERVER_DBDROPDAYS=5"
       - "HEPLIFYSERVER_DBROTATE=true"
       - "HEPLIFYSERVER_LOGLVL=info"
+#      - "HEPLIFYSERVER_LOGDBG=rotator"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
       - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
       - "HEPLIFYSERVER_PROMTARGETNAME=local"
       - "HEPLIFYSERVER_DEDUP=false"
+#      - "HEPLIFYSERVER_SIPHEADER=callid,method,ruri_user,ruri_domain,from_user,from_domain,from_tag,to_user,to_domain,to_tag,contact_user,cseq"
     restart: unless-stopped
     depends_on:
       - db
@@ -112,15 +122,19 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
-    image: sipcapture/webapp
+    image: ghcr.io/sipcapture/homer-app
     environment:
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
+#      - "GRAFANA_HOST=grafana"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+      - "DB_KEEPALIVE=false"
       - "PRESET=timescale"
+      - "HOMER_LOGLEVEL=info"
     restart: unless-stopped
     ports:
       - "9080:80"
@@ -136,6 +150,7 @@ services:
         condition: service_healthy
 
   db:
+    # hostname: db
     container_name: db
     image: timescale/timescaledb:latest-pg11
     restart: always

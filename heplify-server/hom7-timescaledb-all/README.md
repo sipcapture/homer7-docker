@@ -23,7 +23,7 @@ to bring up:
 * [Grafana]      localhost:3000 (admin/admin)
 * [Alertmanager] localhost:9093 (admin/admin)
 
-When the Grafana dashboard autoprovisioning does not work for you make sure you have no old grafana volumes.
+When the Grafana dashboard auto-provisioning does not work for you make sure you have no old Grafana volumes.
 
 ## Configuration
 
@@ -40,7 +40,7 @@ curl -s -XPOST localhost:9093/-/reload -u admin:admin
 ```
 
 #### Service
-When you need to change the docker-compose file i.e to setup smtp for Grafana:
+When you need to change the docker-compose file i.e to setup SMTP for Grafana:
 ```bash
 docker-compose up -d
 ```

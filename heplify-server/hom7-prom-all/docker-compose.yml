@@ -6,6 +6,7 @@ volumes:
 
 services:
   prometheus:
+    # hostname: prometheus
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
@@ -28,6 +29,7 @@ services:
         max-size: "50m"
 
   alertmanager:
+    # hostname: alert
     image: prom/alertmanager:latest
     container_name: alertmanager
     volumes: 
@@ -47,6 +49,7 @@ services:
       - grafana
 
   nodeexporter:
+    # hostname: nodeexporter
     image: prom/node-exporter:latest
     container_name: nodeexporter
     user: root
@@ -71,11 +74,14 @@ services:
       - prometheus
   
   grafana:
+    # hostname: grafana
     image: grafana/grafana:master
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana_plugins:/var/lib/grafana/plugins
       - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/:/etc/grafana/
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -85,6 +91,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_EXPLORE_ENABLED=true
+#      - GF_INSTALL_PLUGINS=some-plugin
     restart: unless-stopped
     ports:
       - "9030:3000"
@@ -100,6 +107,7 @@ services:
         max-size: "50m"
 
   loki:
+    # hostname: loki
     image: grafana/loki
     container_name: loki
     restart: unless-stopped
@@ -125,6 +133,8 @@ services:
     environment:
       - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
       - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_HEPTLSADDR=0.0.0.0:9061"
+      - "HEPLIFYSERVER_TLSCERTFOLDER=certs"
       - "HEPLIFYSERVER_DBSHEMA=homer7"
       - "HEPLIFYSERVER_DBDRIVER=postgres"
       - "HEPLIFYSERVER_DBADDR=db:5432"
@@ -135,6 +145,7 @@ services:
       - "HEPLIFYSERVER_DBROTATE=true"
       - "HEPLIFYSERVER_DBDROPDAYS=5"
       - "HEPLIFYSERVER_LOGLVL=info"
+#      - "HEPLIFYSERVER_LOGDBG=rotator"
       - "HEPLIFYSERVER_LOGSTD=true"
       - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
 #      - "HEPLIFYSERVER_PROMTARGETIP=127.0.0.1"
@@ -142,6 +153,7 @@ services:
       - "HEPLIFYSERVER_DEDUP=false"
       - "HEPLIFYSERVER_LOKIURL=http://loki:3100/api/prom/push"
       - "HEPLIFYSERVER_LOKITIMER=2"
+#      - "HEPLIFYSERVER_SIPHEADER=callid,method,ruri_user,ruri_domain,from_user,from_domain,from_tag,to_user,to_domain,to_tag,contact_user,cseq"
     restart: unless-stopped
     depends_on:
       - loki
@@ -156,14 +168,18 @@ services:
         max-size: "50m"
 
   homer-webapp:
+    # hostname: homer
     container_name: homer-webapp
     image: ghcr.io/sipcapture/homer-app
     environment:
       - "LOKI_HOST=loki"
       - "PROM_HOST=prometheus"
+#      - "GRAFANA_HOST=grafana"
       - "DB_HOST=db"
       - "DB_USER=root"
       - "DB_PASS=homerSeven"
+      - "DB_KEEPALIVE=false"
+      - "HOMER_LOGLEVEL=info"
     restart: unless-stopped
     ports:
       - "9080:80"
@@ -179,6 +195,7 @@ services:
         condition: service_healthy
 
   db:
+    # hostname: db
     container_name: db
     image: postgres:11-alpine
     environment:

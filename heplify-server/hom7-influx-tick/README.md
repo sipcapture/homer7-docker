@@ -20,7 +20,7 @@ to bring up:
   * Telegraf
 
 ## Notes
-When dealing with prometheus counters in InfluxDB, refer to the following example usage of `difference` and `derivative` functions when selecting:
+When dealing with Prometheus counters in InfluxDB, refer to the following example usage of `difference` and `derivative` functions when selecting:
 ```
 SELECT difference(last("counter")) AS "mean_counter" FROM "homer"."autogen"."heplify_method_response" WHERE time > :dashboardTime: GROUP BY time(:interval:), "method", "response" FILL(null)
 ```
