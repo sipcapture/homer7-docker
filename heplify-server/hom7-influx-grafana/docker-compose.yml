@@ -4,7 +4,6 @@ services:
 
   db:
     image: postgres:11-alpine
-    restart: always
     environment:
       POSTGRES_PASSWORD: homerSeven
       POSTGRES_USER: root
