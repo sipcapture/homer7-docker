@@ -142,7 +142,6 @@ services:
     container_name: grafana
     volumes:
       - ./grafana_data:/var/lib/grafana
-      - ./grafana_plugins:/var/lib/grafana/plugins
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
