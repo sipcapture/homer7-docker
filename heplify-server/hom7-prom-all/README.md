@@ -52,6 +52,11 @@ To reset and cause db provisioning, simply empty out the `bootstrap` file
 echo "" > ./bootstrap
 ```
 
+#### SIP search by Capture ID
+Homer provisions `protocol_header.captureId` as an **integer** mapping field. That makes the search API cast values with `::int`, which returns no rows when agents send non-numeric capture IDs (for example heplify **`-hn`** node names). See [homer-app#449](https://github.com/sipcapture/homer-app/issues/449).
+
+On `docker compose up`, the one-shot `homer-mapping-patch` service updates `fields_mapping` so Capture ID is searched as a string. For numeric-only capture IDs, use heplify **`-hi`** (HEP node ID).
+
 #### Loki log retention
 Loki stores data under the `loki_data` volume using `loki/loki-local-config.yaml`. Retention is enabled via the compactor; default period is **168h** (7 days).
 

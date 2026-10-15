@@ -201,6 +201,34 @@ services:
       grafana:
         condition: service_healthy
 
+  homer-mapping-patch:
+    image: postgres:11-alpine
+    container_name: homer-mapping-patch
+    environment:
+      PGPASSWORD: homerSeven
+    volumes:
+      - ./conf/patch-capture-id-mapping.sql:/patch.sql:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        echo "Waiting for Homer mapping_schema..."
+        for i in $$(seq 1 90); do
+          count=$$(psql -h db -U root -d homer_config -tAc "SELECT COUNT(*) FROM mapping_schema" 2>/dev/null || echo 0)
+          if [ "$$count" -gt 0 ]; then
+            break
+          fi
+          sleep 2
+        done
+        psql -h db -U root -d homer_config -v ON_ERROR_STOP=1 -f /patch.sql
+        echo "Capture ID mapping patch applied"
+    depends_on:
+      db:
+        condition: service_healthy
+      homer-webapp:
+        condition: service_started
+    restart: "no"
+
   db:
     # hostname: db
     container_name: db
