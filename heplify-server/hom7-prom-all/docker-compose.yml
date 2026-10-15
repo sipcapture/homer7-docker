@@ -3,6 +3,7 @@ version: '2.1'
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    loki_data: {}
 
 services:
   prometheus:
@@ -109,6 +110,14 @@ services:
     image: grafana/loki
     container_name: loki
     restart: unless-stopped
+    volumes:
+      - loki_data:/loki
+      - ./loki/loki-local-config.yaml:/etc/loki/local-config.yaml:ro
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+      - -config.expand-env=true
+    environment:
+      - LOKI_RETENTION_PERIOD=${LOKI_RETENTION_PERIOD:-168h}
     expose:
       - 3100
     ports:

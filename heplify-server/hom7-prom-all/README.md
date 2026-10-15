@@ -51,3 +51,15 @@ To reset and cause db provisioning, simply empty out the `bootstrap` file
 ```
 echo "" > ./bootstrap
 ```
+
+#### Loki log retention
+Loki stores data under the `loki_data` volume using `loki/loki-local-config.yaml`. Retention is enabled via the compactor; default period is **168h** (7 days).
+
+Set a different retention period before starting the stack:
+
+```bash
+export LOKI_RETENTION_PERIOD=720h   # 30 days
+docker compose up -d
+```
+
+See [Grafana Loki retention](https://grafana.com/docs/loki/latest/operations/storage/retention/) for details.
